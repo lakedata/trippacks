@@ -1,4 +1,4 @@
-# trippacks
+# voyage-back
 Back-end repository입니다.
 
 #### Git Commit Message Style Guide
