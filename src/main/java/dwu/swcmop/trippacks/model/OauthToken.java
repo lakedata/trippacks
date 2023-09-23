@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Component
 public class OauthToken {
+
         String token_type;
         String access_token;
         Integer expires_in;

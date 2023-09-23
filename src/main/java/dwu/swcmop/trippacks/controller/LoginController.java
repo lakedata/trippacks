@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController //(1)
 @RequestMapping("/Kakao")
 public class LoginController {
+
     @Autowired
     private UserService userService; //(2)
 

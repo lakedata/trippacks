@@ -13,6 +13,7 @@ import java.security.Timestamp;
 @NoArgsConstructor//기본 생성자 만들어줌, 갑이 비어도 됨
 @Table(name = "user_master") //(1)
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) //(2)
     @Column(name = "user_code") //(3)
