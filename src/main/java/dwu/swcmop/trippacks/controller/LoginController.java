@@ -1,14 +1,25 @@
 package dwu.swcmop.trippacks.controller;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import dwu.swcmop.trippacks.model.OauthToken;
+import dwu.swcmop.trippacks.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
-@Controller
-@RequestMapping("/login")
+@RestController //(1)
+@RequestMapping("/Kakao")
 public class LoginController {
-    @GetMapping
-    public String login() {
-        return "login";
+
+    @Autowired
+    private UserService userService; //(2)
+
+    // 프론트에서 인가코드 받아오는 url
+    @GetMapping("/oauth/token") // (3)
+    public OauthToken getLogin(@RequestParam("code") String code) { //(4)
+
+        // 넘어온 인가 코드를 통해 access_token 발급 //(5)
+        OauthToken oauthToken = userService.getAccessToken(code);
+
+        return oauthToken;
     }
+
 }
