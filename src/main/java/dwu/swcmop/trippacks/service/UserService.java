@@ -45,7 +45,7 @@ public class UserService {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("grant_type", "authorization_code");
         params.add("client_id", "b791159adc4e18ab175997922e03859a");//{클라이언트 앱 키}
-        params.add("redirect_uri", "http://localhost:8080/auth");//{리다이렉트 uri}
+        params.add("redirect_uri", "http://localhost:3000/auth");//{리다이렉트 uri}
         params.add("code", code);
         params.add("client_secret", "SvMeE9hOht1CwtY23mlES55AY66dq7pP"); // 생략 가능!{시크릿 키}
 
