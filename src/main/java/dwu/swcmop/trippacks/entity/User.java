@@ -49,3 +49,26 @@ public class User {
         this.userRole = userRole;
     }
 }
+//user db바꿔서 연관되어있는 db나중에 수정 예정..(아직 안함)
+
+//    @Entity
+//    @Table(name = "users")
+//    public class User {
+//        @Id
+//        @GeneratedValue(strategy = GenerationType.IDENTITY)
+//        @Column(name = "user_id")
+//        private Long userId;
+//
+//        @Column(name = "kakao_email")
+//        private String kakaoEmail;
+//
+//        @Column(name = "kakao_name")
+//        private String kakaoName;
+//
+//        @Column(name = "kakao_password")
+//        private String kakaoPassword;
+//
+//        @Column(name = "profile_url")
+//        private String profileUrl;
+//
+//    }
