@@ -1,17 +1,9 @@
-package dwu.swcmop.trippacks.model;
+package dwu.swcmop.trippacks.model.oauth;
 
-import org.springframework.stereotype.Component;
-
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Component
 public class OauthToken {
-
         String token_type;
         String access_token;
         Integer expires_in;
