@@ -22,9 +22,6 @@ import org.springframework.web.client.RestTemplate;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 
-
-
-
 @Service
 public class UserService {
 
@@ -73,12 +70,11 @@ public class UserService {
         return oauthToken; //(8)
     }
 
-
     public String SaveUserAndGetToken(String token) { //(1)
         KakaoProfile profile = findProfile(token);
 
         User user = userRepository.findByKakaoEmail(profile.getKakao_account().getEmail());
-        if(user == null) {
+        if (user == null) {
             user = User.builder()
                     .kakaoId(profile.getId())
                     .kakaoProfileImg(profile.getKakao_account().getProfile().getProfile_image_url())
@@ -99,7 +95,7 @@ public class UserService {
 
                 //(2-3)
                 .withSubject(user.getKakaoEmail())
-                .withExpiresAt(new Date(System.currentTimeMillis()+ JwtProperties.EXPIRATION_TIME))
+                .withExpiresAt(new Date(System.currentTimeMillis() + JwtProperties.EXPIRATION_TIME))
 
                 //(2-4)
                 .withClaim("id", user.getUserCode())
@@ -111,33 +107,7 @@ public class UserService {
         return jwtToken; //(2-6)
     }
 
-
-
-//    public User saveUser(String token) {
-//        //(1)
-//        KakaoProfile profile = findProfile(token);
-//
-//        //(2)
-//        User user = userRepository.findByKakaoEmail(profile.getKakao_account().getEmail());
-//
-//        //(3)
-//        if(user == null) { //만약 null 이라면 DB에 저장되지 않은 사용자이므로 사용자 저장 로직을 실행
-//            user = User.builder()
-//                    .kakaoId(profile.getId())
-//                    //(4)
-//                    .kakaoProfileImg(profile.getKakao_account().getProfile().getProfile_image_url())
-//                    .kakaoNickname(profile.getKakao_account().getProfile().getNickname())
-//                    .kakaoEmail(profile.getKakao_account().getEmail())
-//                    //(5)
-//                    .userRole("ROLE_USER").build();
-//
-//            userRepository.save(user);
-//        }
-//
-//        return user;
-//    }
-
-    //(1-1)
+    //(1-1)동의항목 가져오기
     public KakaoProfile findProfile(String token) {
 
         //(1-2) POST 방식으로 key=value 데이터 요청
@@ -175,7 +145,7 @@ public class UserService {
     public User getUser(HttpServletRequest request) {
         Long userCode = (Long) request.getAttribute("userCode");
 
-        User user = userRepository.findByUserCode(String.valueOf(userCode));
+        User user = userRepository.findByUserCode(userCode);
 
         return user;
     }
