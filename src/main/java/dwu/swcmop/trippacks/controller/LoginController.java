@@ -7,6 +7,7 @@ import dwu.swcmop.trippacks.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -49,13 +50,18 @@ public class LoginController {
         return ResponseEntity.ok().body(user);
     }
 
-    @ApiOperation(value = "로그아웃", notes = "카카오 로그아웃한다.")
+    @ApiOperation(value = "로그아웃", notes = "유효하면 header의 access token로 로그아웃")
     @GetMapping(value = "/logout")
-    public Map<String, Object> logout(@RequestHeader Map<String, Object> requestHeader) {
+    public ResponseEntity logout(@RequestHeader Map<String, Object> requestHeader) {
+
         System.out.println(requestHeader);
         System.out.println(requestHeader.get("authorization"));
         System.out.println("로그아웃 시도");
-        return requestHeader;
+
+        boolean isPossible = userService.kakaoLogout(requestHeader.get("authorization").toString().split(" ")[1]);
+        if (isPossible)
+            return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity(HttpStatus.BAD_REQUEST);
     }
 
 }

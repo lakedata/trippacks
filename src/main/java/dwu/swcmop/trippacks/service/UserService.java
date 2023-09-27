@@ -6,6 +6,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dwu.swcmop.trippacks.entity.User;
 import dwu.swcmop.trippacks.config.jwt.JwtProperties;
+import dwu.swcmop.trippacks.model.oauth.Oauth2Kakao;
 import dwu.swcmop.trippacks.model.oauth.OauthToken;
 import dwu.swcmop.trippacks.model.oauth.KakaoProfile;
 import dwu.swcmop.trippacks.repository.UserRepository;
@@ -20,6 +21,11 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
 import java.util.Date;
 
 @Service
@@ -27,6 +33,7 @@ public class UserService {
 
     @Autowired
     UserRepository userRepository; //(1)
+    Oauth2Kakao oauth2Kakao;
 
     public OauthToken getAccessToken(String code) {
 
@@ -150,4 +157,15 @@ public class UserService {
         return user;
     }
 
+
+    /**
+     * 카카오 로그아웃
+     */
+    public boolean kakaoLogout(String accessToken) {
+        int responseCode = oauth2Kakao.kakaoLogout(accessToken);
+        if (responseCode == 200) {
+            return true;
+        }
+        return false;
+    }
 }
