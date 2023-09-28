@@ -35,6 +35,7 @@ dependencies {
 	// mysql
 	runtimeOnly 'com.mysql:mysql-connector-j'
 
+
 	//스프링 시큐리티
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	//OAuth2

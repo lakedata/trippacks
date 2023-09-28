@@ -24,11 +24,9 @@ public class Bag {
     @Column(name = "travel_location")
     private String location;
 
-    @Temporal(TemporalType.DATE)
     @Column(name = "start_date")
-    private Date startDate;
+    private String startDate;
 
-    @Temporal(TemporalType.DATE)
     @Column(name = "end_date")
-    private Date endDate;
+    private String endDate;
 }
