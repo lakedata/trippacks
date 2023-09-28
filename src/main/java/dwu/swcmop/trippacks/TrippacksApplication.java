@@ -7,8 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@SpringBootApplication
-//@SpringBootApplication(exclude = {SecurityAutoConfiguration.class})// 기본 로그인페이지 없애기
+@SpringBootApplication(exclude = SecurityAutoConfiguration.class)
 public class TrippacksApplication {
 
 	@RequestMapping("/")
