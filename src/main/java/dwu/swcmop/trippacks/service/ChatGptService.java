@@ -20,6 +20,7 @@ public class ChatGptService {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.parseMediaType(ChatGptConfig.MEDIA_TYPE));
         headers.add(ChatGptConfig.AUTHORIZATION, ChatGptConfig.BEARER + ChatGptConfig.API_KEY);
+        System.setProperty("https.protocols", "TLSv1.2"); //TLS 버전을 맞추기 위함
         return new HttpEntity<>(requestDto, headers);
     }
 

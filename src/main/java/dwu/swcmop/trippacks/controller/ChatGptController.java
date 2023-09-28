@@ -15,6 +15,7 @@ public class ChatGptController {
     private final ChatGptService chatGptService;
 
     public ChatGptController(ChatGptService chatGptService) {
+
         this.chatGptService = chatGptService;
     }
 
