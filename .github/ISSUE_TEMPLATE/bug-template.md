@@ -1,5 +1,5 @@
 ---
-name: Custom bug template
+name: bug template
 about: Describe this bug template's purpose here.
 title: ''
 labels: "\U0001F41Bbug"
