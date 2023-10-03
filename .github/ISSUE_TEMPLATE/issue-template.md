@@ -9,8 +9,9 @@ assignees: ''
 
 ## Description
 
+> description
+
 ## Progress
 - [] todo1
 - [] todo2
 - [] todo3
-##참고사항
