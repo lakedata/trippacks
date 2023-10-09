@@ -1,8 +1,11 @@
 package dwu.swcmop.trippacks.entity;
 
-import javax.persistence.*;
-import java.util.Date;
+import lombok.Data;
 
+import javax.persistence.*;
+
+
+@Data
 @Entity
 @Table(name = "bag")
 public class Bag {
@@ -29,4 +32,12 @@ public class Bag {
 
     @Column(name = "end_date")
     private String endDate;
+
+    public Bag(String status, String bagName, String location, String startDate, String endDate) {
+        this.status = status;
+        this.bagName = bagName;
+        this.location = location;
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
 }
