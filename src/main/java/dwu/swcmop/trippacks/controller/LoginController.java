@@ -50,18 +50,5 @@ public class LoginController {
         return ResponseEntity.ok().body(user);
     }
 
-    @ApiOperation(value = "로그아웃", notes = "유효하면 header의 access token로 로그아웃")
-    @GetMapping(value = "/logout")
-    public ResponseEntity logout(@RequestHeader Map<String, Object> requestHeader) {
-
-        System.out.println(requestHeader);
-        System.out.println(requestHeader.get("authorization"));
-        System.out.println("로그아웃 시도");
-
-        boolean isPossible = userService.kakaoLogout(requestHeader.get("authorization").toString().split(" ")[1]);
-        if (isPossible)
-            return new ResponseEntity(HttpStatus.OK);
-        return new ResponseEntity(HttpStatus.BAD_REQUEST);
-    }
 
 }
