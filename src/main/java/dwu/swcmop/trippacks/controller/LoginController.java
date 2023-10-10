@@ -2,17 +2,14 @@ package dwu.swcmop.trippacks.controller;
 
 import dwu.swcmop.trippacks.entity.User;
 import dwu.swcmop.trippacks.config.jwt.JwtProperties;
-import dwu.swcmop.trippacks.model.oauth.OauthToken;
 import dwu.swcmop.trippacks.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Map;
 
 @RestController //(1)
 @RequestMapping("/api")
@@ -21,16 +18,13 @@ public class LoginController {
     private UserService userService; //(2)
 
     // 프론트에서 인가코드 받아오는 url
-    @ApiOperation(value = "카카오로그인", notes = "액세스 토큰을 얻어 jwt발급한다.")
+    @ApiOperation(value = "카카오회원가입", notes = "access_token을 얻어 db저장 후 jwt발급한다.")
     @GetMapping("/oauth/token") // (3)
     public ResponseEntity getLogin(@RequestParam("code") String code) { //(4)
         System.out.println("code : " + code);
 
-        // 넘어온 인가 코드를 통해 access_token 발급 //(5)
-        OauthToken oauthToken = userService.getAccessToken(code);
-
         // 발급 받은 accessToken 으로 카카오 회원 정보 DB 저장 후 JWT 를 생성
-        String jwtToken = userService.SaveUserAndGetToken(oauthToken.getAccess_token());
+        String jwtToken = userService.SaveUserAndGetToken(code);
 
         //(3)
         HttpHeaders headers = new HttpHeaders();
