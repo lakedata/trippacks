@@ -14,20 +14,20 @@ import java.util.Optional;
 public class PackController {
     private PackService packService;
 
-    @GetMapping("/pack/list/{bag}")
-    public List<Pack> getPackList(@PathVariable("bag") Bag bag){
-        return packService.findAllPack(bag);
-    }
+//    @GetMapping("/pack/list/{bag}")
+//    public List<Pack> getPackList(@PathVariable("bag") Bag bag){
+//        return packService.findAllPack(bag);
+//    }
 
     @GetMapping("/pack/{id}")
     public Optional<Pack> getPack(@PathVariable("id") Long id){
         return packService.findPack(id);
     }
 
-    @PostMapping("/pack")
-    public Pack addPack(@RequestBody Pack pack){
-        return packService.addPack(pack);
-    }
+//    @PostMapping("/pack")
+//    public Pack addPack(@RequestBody Pack pack){
+//        return packService.addPack(pack);
+//    }
 
     @PutMapping("/pack/{id}")
     public Pack updatePack(@RequestBody Pack pack, @PathVariable("id") Long id){
