@@ -16,24 +16,6 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/bag")
 public class BagController {
-    private final BagService bagService;
 
-    @Autowired
-    public BagController(BagService bagService) {
-        this.bagService = bagService;
-    }
-
-    @ApiOperation(value = "가방 생성", notes = "짐을 추가한다.")
-    @PostMapping("/add")
-    public BaseResponse<BagResponse> create(@RequestBody @Valid BagRequest bagRequest) {
-        try {
-
-            BagResponse bagResponse = bagService.createBag(bagRequest);
-
-            return new BaseResponse<>(bagResponse);
-        } catch (BaseException e) {
-            return new BaseResponse<>(e.getStatus());
-        }
-    }
 
 }
