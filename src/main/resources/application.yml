@@ -1,0 +1,37 @@
+spring:
+  datasource:
+    url: jdbc:mysql://trippack.ckw3gln27uib.us-east-1.rds.amazonaws.com:3306/trippack_db?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
+    username: trippack
+    password: trippack
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+
+#  security:
+#    oauth2:
+#      client:
+#        registration:
+#          kakao:
+#            client-id: fcf78e99174996ae189702c84e5d3dba
+#            client-secret: SigSWzdYjPbcuXRHU8evePBOy4sDfNEX
+#            authorization-grant-type: authorization_code
+#            client-authentication-method: POST
+#            client-name: Kakao
+#            redirect-uri: http://localhost:8080/login/oauth2/code/kakao
+#            scope:
+#              - profile_nickname
+#              - account_email
+#        provider:
+#          kakao:
+#            authorization-uri: https://kauth.kakao.com/oauth/authorize
+#            token-uri: https://kauth.kakao.com/oauth/token
+#            user-info-uri: https://kapi.kakao.com/v2/user/me
+#            user-name-attribute: id
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
