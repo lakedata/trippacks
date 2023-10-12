@@ -18,6 +18,7 @@ public enum BaseResponseStatus {
     // Common
     INVALID_JWT(false, 2000, "유효하지 않은 JWT입니다."),
     EMPTY_JWT(false, 2001, "JWT를 입력하세요"),
+    INVALID_USER(false, 2002, "등록되지 않은 사용자입니다."),
 
     /**
      * 3000 : Response 오류
