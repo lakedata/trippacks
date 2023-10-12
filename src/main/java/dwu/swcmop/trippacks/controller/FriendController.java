@@ -1,0 +1,115 @@
+package dwu.swcmop.trippacks.controller;
+
+import dwu.swcmop.trippacks.config.BaseException;
+import dwu.swcmop.trippacks.config.BaseResponse;
+import dwu.swcmop.trippacks.dto.FriendRequest;
+import dwu.swcmop.trippacks.dto.FriendResponse;
+import dwu.swcmop.trippacks.entity.Friend;
+import dwu.swcmop.trippacks.repository.FriendRepository;
+import dwu.swcmop.trippacks.service.FriendService;
+import dwu.swcmop.trippacks.service.UserService;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static dwu.swcmop.trippacks.config.BaseResponseStatus.ACCEPT_FRIEND_FAIL;
+import static dwu.swcmop.trippacks.config.BaseResponseStatus.DELETE_FRIEND_FAIL;
+
+
+@AllArgsConstructor
+@RestController
+@RequestMapping("/friend")
+public class FriendController {
+    @Autowired
+    private FriendService friendService;
+
+    @Autowired
+    private FriendRepository friendRepository;
+
+    @Autowired
+    private UserService userService;
+
+    @ApiOperation(value = "친구 추가", notes = "친구를 추가한다.")
+    @PostMapping("/add")
+    public BaseResponse<FriendResponse> create(@RequestBody @Valid FriendRequest friendRequest) {
+        try {
+
+            FriendResponse bagResponse = friendService.createFriend(friendRequest);
+
+            return new BaseResponse<>(bagResponse);
+        } catch (BaseException e) {
+            return new BaseResponse<>(e.getStatus());
+        }
+    }
+
+    //친구 수락
+    @PatchMapping("/accept/{userId}/{friendId}")
+    @Operation(summary = "친구 수락", description = "사용자Id, 친구Id 입력받아 친구 수락합니다.")
+    public BaseResponse<String> acceptFriend(@PathVariable("userId") long Id, @PathVariable("friendId") long fId) {
+        try {
+            int result = friendService.acceptFriend(Id, fId);
+            if (result != 1) {
+                throw new BaseException(ACCEPT_FRIEND_FAIL);
+            } else {
+                return new BaseResponse<>("친구 수락에 성공했습니다.");
+            }
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+    @GetMapping("/friendList/{userId}")
+    @Operation(summary = "친구 list 조회", description = "내 Id를 입력받아 친구 목록 조회한다.")
+    public BaseResponse<List<String>> getFriendsList(@PathVariable("userId") Long userId) {
+        try {
+            List<Friend> friends = friendRepository.findUserEntityByUserId(userId);
+
+            // Extract kakaoEmails from Friend objects
+            List<String> kakaoEmails = friends.stream()
+                    .map(Friend::getKakaoEmail)
+                    .collect(Collectors.toList());
+
+            return new BaseResponse<>(kakaoEmails);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @DeleteMapping("/delete/{userId}/{friendId}")
+    @Operation(summary = "친구 삭제", description = "사용자Id, 친구Id 입력받아 친구 삭제를 삭제합니다.")
+    public BaseResponse<String> deleteFriend(@PathVariable("userId") long Id, @PathVariable("friendId") long fId) {
+        try {
+            long userId = Long.parseLong(String.valueOf(Id));
+            long friendId = Long.parseLong(String.valueOf(fId));
+
+            int result = friendService.deleteFriend(userId, friendId);
+            if (result != 1) {
+                throw new BaseException(DELETE_FRIEND_FAIL);
+            } else {
+                return new BaseResponse<>("친구 삭제에 성공했습니다.");
+            }
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+}
+
+//    @ApiOperation(value = "초대 링크를 발행합니다")
+//    @PostMapping("/links")
+//    public BaseResponse<BagResponse> create(@RequestBody @Valid BagRequest bagRequest) {
+//        try {
+//
+//            BagResponse bagResponse = bagService.createBag(bagRequest);
+//
+//            return new BaseResponse<>(bagResponse);
+//        } catch (BaseException e) {
+//            return new BaseResponse<>(e.getStatus());
+//        }
+//    }
