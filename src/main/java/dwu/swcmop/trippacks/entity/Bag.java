@@ -1,11 +1,19 @@
 package dwu.swcmop.trippacks.entity;
 
+import dwu.swcmop.trippacks.dto.BagStatus;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 @Entity
+@Getter @Setter
+@NoArgsConstructor
 @Table(name = "bag")
 public class Bag {
     @Id
@@ -18,7 +26,8 @@ public class Bag {
     private User user;
 
     @Column(name = "status")
-    private String status;
+    @Enumerated(EnumType.ORDINAL)
+    private BagStatus status;
 
     @Column(name = "bag_name")
     private String bagName;
@@ -35,4 +44,12 @@ public class Bag {
 
     @OneToMany(mappedBy = "bag")
     private List<Pack> pack = new ArrayList<>();
+
+    @Builder
+    public Bag(User user, String location, String bagName, String endDate){
+        this.user = user;
+        this.location = location;
+        this.bagName = bagName;
+        this.endDate = endDate;
+    }
 }

@@ -1,9 +1,11 @@
 package dwu.swcmop.trippacks.service;
 
+import dwu.swcmop.trippacks.dto.PackRequest;
 import dwu.swcmop.trippacks.entity.Bag;
 import dwu.swcmop.trippacks.entity.Pack;
 import dwu.swcmop.trippacks.entity.User;
 import dwu.swcmop.trippacks.exception.ResourceNotFoundException;
+import dwu.swcmop.trippacks.repository.BagRepository;
 import dwu.swcmop.trippacks.repository.PackRepository;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -18,19 +20,20 @@ import java.util.OptionalInt;
 @AllArgsConstructor
 public class PackService {
     private final PackRepository packRepository;
+    private final BagRepository bagRepository;
 
     //짐 추가
-//    @Transactional
-//    public Pack addPack(Long bagId, String packName, Boolean isRequired){
-//        Bag bag = bagRepository.findById(bagId);
-//
-//        Pack pack = Pack.builder()
-//                .bag(bag)
-//                .packName(packName)
-//                .isRequired(isRequired)
-//                .build();
-//        return packRepository.save(pack);
-//    }
+    @Transactional
+    public Pack addPack(PackRequest request){
+        Bag bag = bagRepository.findByBagId(request.getBagId());
+
+        Pack pack = Pack.builder()
+                .bag(bag)
+                .packName(request.getPackName())
+                .isRequired(request.getIsRequired())
+                .build();
+        return packRepository.save(pack);
+    }
 
 
     //짐 조회
@@ -39,11 +42,11 @@ public class PackService {
         return packRepository.findById(id);
     }
 
-//    @Transactional
-//    public List<Pack> findAllPack(Long bagId){
-//        Bag bag = bagRepository.findById(bagId);
-//        return packRepository.findPackByBag(bag);
-//    }
+    @Transactional
+    public List<Pack> findAllPack(Long bagId){
+        Bag bag = bagRepository.findByBagId(bagId);
+        return packRepository.findPackByBag(bag);
+    }
 
     //짐 수정
     @Transactional
