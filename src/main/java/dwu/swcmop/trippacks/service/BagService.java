@@ -14,6 +14,7 @@ import static dwu.swcmop.trippacks.config.BaseResponseStatus.SAVE_BAG_FAIL;
 public class BagService {
     @Autowired
     private BagRepository bagRepository;
+
     public BagService(BagRepository bagRepository) {
         this.bagRepository = bagRepository;
     }
