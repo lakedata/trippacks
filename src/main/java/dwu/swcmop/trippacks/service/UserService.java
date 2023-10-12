@@ -4,10 +4,13 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import dwu.swcmop.trippacks.config.BaseException;
 import dwu.swcmop.trippacks.entity.User;
 import dwu.swcmop.trippacks.config.jwt.JwtProperties;
 import dwu.swcmop.trippacks.model.oauth.KakaoProfile;
 import dwu.swcmop.trippacks.repository.UserRepository;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -16,8 +19,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
+import java.util.Optional;
+
+import static dwu.swcmop.trippacks.config.BaseResponseStatus.EMPTY_JWT;
+import static dwu.swcmop.trippacks.config.BaseResponseStatus.INVALID_JWT;
 
 @Service
 public class UserService {
@@ -97,6 +105,28 @@ public class UserService {
         return kakaoProfile;
     }
 
+    public void deleteUser(Long id) throws BaseException {
+        try {
+            Optional<User> user = userRepository.findById(id);
+            if (user.isPresent()) {
+                userRepository.delete(user.get());
+            } else {
+                throw new BaseException(EMPTY_JWT);
+            }
+        } catch (ExpiredJwtException exception) {
+            // 예외가 발생한 경우에 대한 처리
+            throw new BaseException(INVALID_JWT);
+        }
+    }
+
+    public Long extractId(String token) {// "Bearer " 접두어를 제거해서 넣음
+        Long userCode = JWT.require(Algorithm.HMAC512(JwtProperties.SECRET)).build().verify(token)
+                .getClaim("id").asLong();
+
+        return userCode;
+    }
+
+
     public User getUser(HttpServletRequest request) {
         Long userCode = (Long) request.getAttribute("userCode");
 
@@ -104,4 +134,10 @@ public class UserService {
 
         return user;
     }
+
+    public User findById(Long id) {
+        return userRepository.findByUserCode(id);
+    }
+
+
 }
