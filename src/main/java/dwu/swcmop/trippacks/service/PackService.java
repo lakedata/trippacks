@@ -38,22 +38,26 @@ public class PackService {
 
     //짐 조회
     @Transactional
-    public Optional<Pack> findPack(Long id){
-        return packRepository.findById(id);
+    public Pack findPack(Long id){
+        return packRepository.findByPackId(id);
     }
 
     @Transactional
     public List<Pack> findAllPack(Long bagId){
         Bag bag = bagRepository.findByBagId(bagId);
-        return packRepository.findPackByBag(bag);
+        return packRepository.findAllByBag(bag);
     }
 
     //짐 수정
     @Transactional
-    public Pack update(Long id, Pack newPack){
-        Pack pack = packRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Pack", "id", id));
+    public Pack update(Long id, PackRequest newPack){
+        Pack pack = packRepository.findByPackId(id);
+        if(pack == null) new ResourceNotFoundException("Pack", "id", id);
         pack.setPackName(newPack.getPackName());
+        pack.setIsRequired(newPack.getIsRequired());
+        if(newPack.getIsRequired() == true)
+            pack.setIsPersonal(false);
+        else pack.setIsPersonal(true);
         return packRepository.save(pack);
     }
 
