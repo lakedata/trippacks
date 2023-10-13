@@ -24,13 +24,14 @@ public class LoginController {
 
 
     // 프론트에서 인가코드 받아오는 url
-    @ApiOperation(value = "카카오 로그인", notes = "access_token을 얻어 db저장 후 jwt발급한다.")
+    @ApiOperation(value = "카카오 로그인", notes = "카카오값(프론트에서 accesstoken으로 저장된 회원정보)를 DB저장 후 JWT발급한다.")
     @GetMapping("/oauth/token") // (3)
-    public ResponseEntity getLogin(@RequestParam("code") String code) { //(4)
-        System.out.println("code : " + code);
+    public ResponseEntity getLogin(@RequestParam("kakaoId") Long kakaoId, @RequestParam("kakaoProfileImg") String kakaoProfileImg, @RequestParam("kakaoNickname") String kakaoNickname, @RequestParam("kakaoEmail") String kakaoEmail, @RequestParam("userRole") String userRole) {
 
-        // 발급 받은 accessToken 으로 카카오 회원 정보 DB 저장 후 JWT 를 생성
-        String jwtToken = userService.SaveUserAndGetToken(code);
+
+        // 카카오 회원 정보 DB 저장 후 JWT 를 생성
+        String jwtToken = userService.saveUserAndGetToken(kakaoId, kakaoProfileImg, kakaoNickname, kakaoEmail, userRole);
+
 
         //(3)
         HttpHeaders headers = new HttpHeaders();
@@ -83,8 +84,6 @@ public class LoginController {
 
         return ResponseEntity.ok().body(user);
     }
-
-
 
 
 }
