@@ -33,17 +33,18 @@ public class UserService {
     @Autowired
     UserRepository userRepository; //(1)
 
-    public String SaveUserAndGetToken(String token) { //(1)
-        KakaoProfile profile = findProfile(token);
 
-        User user = userRepository.findByKakaoEmail(profile.getKakao_account().getEmail());
+    public String saveUserAndGetToken(Long kakaoId, String kakaoProfileImg, String kakaoNickname, String kakaoEmail, String userRole) {
+        User user = userRepository.findByKakaoEmail(kakaoEmail);
+
         if (user == null) {
             user = User.builder()
-                    .kakaoId(profile.getId())
-                    .kakaoProfileImg(profile.getKakao_account().getProfile().getProfile_image_url())
-                    .kakaoNickname(profile.getKakao_account().getProfile().getNickname())
-                    .kakaoEmail(profile.getKakao_account().getEmail())
-                    .userRole("ROLE_USER").build();
+                    .kakaoId(kakaoId)
+                    .kakaoProfileImg(kakaoProfileImg)
+                    .kakaoNickname(kakaoNickname)
+                    .kakaoEmail(kakaoEmail)
+                    .userRole(userRole)
+                    .build();
 
             userRepository.save(user);
         }
