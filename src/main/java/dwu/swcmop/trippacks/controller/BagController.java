@@ -18,8 +18,8 @@ public class BagController {
     private BagService bagService;
 
     @GetMapping("/bag/list")
-    public List<Bag> getBagList(@RequestParam Long userCode){
-        return bagService.findAllBag(userCode);
+    public List<Bag> getBagList(@RequestParam Long kakaoId){
+        return bagService.findAllBag(kakaoId);
     }
 
     @GetMapping("/bag/{id}")
@@ -27,9 +27,9 @@ public class BagController {
         return bagService.findBag(id);
     }
 
-    @PostMapping("/bag/{userCode}")
-    public Bag createBag(@RequestBody BagRequest request, @PathVariable("userCode") Long userCode){
-        return bagService.createBag(userCode, request);
+    @PostMapping("/bag/{kakaoId}")
+    public Bag createBag(@RequestBody BagRequest request, @PathVariable("kakaoId") Long kakaoId){
+        return bagService.createBag(kakaoId, request);
     }
 
     @PutMapping("/bag/{id}")
