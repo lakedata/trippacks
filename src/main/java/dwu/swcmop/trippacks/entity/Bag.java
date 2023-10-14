@@ -1,10 +1,13 @@
 package dwu.swcmop.trippacks.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import dwu.swcmop.trippacks.dto.BagStatus;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.minidev.json.annotate.JsonIgnore;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -21,6 +24,7 @@ public class Bag {
     @Column(name = "bag_id")
     private Long bagId;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "user_code")
     private User user;
@@ -42,7 +46,9 @@ public class Bag {
     private String endDate;
 
 
-    @OneToMany(mappedBy = "bag")
+    @JsonBackReference //슨환참조 방지
+    @OneToMany(mappedBy = "bag",
+                fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Pack> pack = new ArrayList<>();
 
     @Builder

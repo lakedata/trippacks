@@ -21,17 +21,17 @@ public class PackController {
     }
 
     @GetMapping("/pack/{id}")
-    public Optional<Pack> getPack(@PathVariable("id") Long id){
+    public Pack getPack(@PathVariable("id") Long id){
         return packService.findPack(id);
     }
 
     @PostMapping("/pack")
-    public Pack addPack(@RequestBody PackRequest pack){
+    public Pack addPack(@RequestBody PackRequest pack ){
         return packService.addPack(pack);
     }
 
     @PutMapping("/pack/{id}")
-    public Pack updatePack(@RequestBody Pack pack, @PathVariable("id") Long id){
+    public Pack updatePack(@RequestBody PackRequest pack, @PathVariable("id") Long id){
         return packService.update(id, pack);
     }
 
