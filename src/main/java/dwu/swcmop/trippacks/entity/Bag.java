@@ -26,7 +26,7 @@ public class Bag {
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "user_code")
+    @JoinColumn(name = "kakao_id")
     private User user;
 
     @Column(name = "status")
