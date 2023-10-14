@@ -8,7 +8,7 @@ group = 'dwu.swcmop'
 version = '0.0.1-SNAPSHOT'
 
 java {
-	sourceCompatibility = '17'
+	sourceCompatibility = '11'
 }
 
 configurations {
@@ -56,6 +56,10 @@ dependencies {
 
 	//json
 	implementation 'com.googlecode.json-simple:json-simple:1.1.1'
+
+	//mapper
+	implementation 'org.mapstruct:mapstruct:1.5.5.Final'
+	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
 }
 
 tasks.named('test') {

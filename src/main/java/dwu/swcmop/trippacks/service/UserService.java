@@ -4,10 +4,13 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import dwu.swcmop.trippacks.config.BaseException;
 import dwu.swcmop.trippacks.entity.User;
 import dwu.swcmop.trippacks.config.jwt.JwtProperties;
 import dwu.swcmop.trippacks.model.oauth.KakaoProfile;
 import dwu.swcmop.trippacks.repository.UserRepository;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -16,8 +19,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
+import java.util.Optional;
+
+import static dwu.swcmop.trippacks.config.BaseResponseStatus.EMPTY_JWT;
+import static dwu.swcmop.trippacks.config.BaseResponseStatus.INVALID_JWT;
 
 @Service
 public class UserService {
@@ -25,17 +33,18 @@ public class UserService {
     @Autowired
     UserRepository userRepository; //(1)
 
-    public String SaveUserAndGetToken(String token) { //(1)
-        KakaoProfile profile = findProfile(token);
 
-        User user = userRepository.findByKakaoEmail(profile.getKakao_account().getEmail());
+    public String saveUserAndGetToken(Long kakaoId, String kakaoProfileImg, String kakaoNickname, String kakaoEmail, String userRole) {
+        User user = userRepository.findByKakaoEmail(kakaoEmail);
+
         if (user == null) {
             user = User.builder()
-                    .kakaoId(profile.getId())
-                    .kakaoProfileImg(profile.getKakao_account().getProfile().getProfile_image_url())
-                    .kakaoNickname(profile.getKakao_account().getProfile().getNickname())
-                    .kakaoEmail(profile.getKakao_account().getEmail())
-                    .userRole("ROLE_USER").build();
+                    .kakaoId(kakaoId)
+                    .kakaoProfileImg(kakaoProfileImg)
+                    .kakaoNickname(kakaoNickname)
+                    .kakaoEmail(kakaoEmail)
+                    .userRole(userRole)
+                    .build();
 
             userRepository.save(user);
         }
@@ -97,6 +106,28 @@ public class UserService {
         return kakaoProfile;
     }
 
+    public void deleteUser(Long id) throws BaseException {
+        try {
+            Optional<User> user = userRepository.findById(id);
+            if (user.isPresent()) {
+                userRepository.delete(user.get());
+            } else {
+                throw new BaseException(EMPTY_JWT);
+            }
+        } catch (ExpiredJwtException exception) {
+            // 예외가 발생한 경우에 대한 처리
+            throw new BaseException(INVALID_JWT);
+        }
+    }
+
+    public Long extractId(String token) {// "Bearer " 접두어를 제거해서 넣음
+        Long userCode = JWT.require(Algorithm.HMAC512(JwtProperties.SECRET)).build().verify(token)
+                .getClaim("id").asLong();
+
+        return userCode;
+    }
+
+
     public User getUser(HttpServletRequest request) {
         Long userCode = (Long) request.getAttribute("userCode");
 
@@ -104,4 +135,10 @@ public class UserService {
 
         return user;
     }
+
+    public User findById(Long id) {
+        return userRepository.findByUserCode(id);
+    }
+
+
 }
