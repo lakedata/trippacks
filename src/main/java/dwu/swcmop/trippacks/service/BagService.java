@@ -31,9 +31,9 @@ public class BagService {
                 .user(user)
                 .location(request.getLocation())
                 .bagName(request.getBagName())
+                .startDate(request.getStartDate())
                 .endDate(request.getEndDate())
                 .build();
-        newBag.setStartDate(String.valueOf(LocalDate.now()));
         newBag.setStatus(BagStatus.AVAILABLE);
         return bagRepository.save(newBag);
     }
@@ -57,6 +57,7 @@ public class BagService {
         if(bag == null) new ResourceNotFoundException("Bag", "id", id);
         bag.setBagName(request.getBagName());
         bag.setLocation(request.getLocation());
+        bag.setStartDate(request.getStartDate());
         bag.setEndDate(request.getEndDate());
         return bagRepository.save(bag);
     }
@@ -69,6 +70,5 @@ public class BagService {
         bagRepository.delete(bag);
     }
 
-    //가방 종료
 
 }

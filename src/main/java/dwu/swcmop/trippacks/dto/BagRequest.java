@@ -6,5 +6,6 @@ import lombok.*;
 public class BagRequest {
     private String bagName;
     private String location;
+    private String startDate;
     private String endDate;
 }

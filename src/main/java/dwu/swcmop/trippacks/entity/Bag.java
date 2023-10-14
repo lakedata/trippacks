@@ -52,10 +52,11 @@ public class Bag {
     private List<Pack> pack = new ArrayList<>();
 
     @Builder
-    public Bag(User user, String location, String bagName, String endDate){
+    public Bag(User user, String location, String bagName, String startDate,String endDate){
         this.user = user;
         this.location = location;
         this.bagName = bagName;
+        this.startDate = startDate;
         this.endDate = endDate;
     }
 }
