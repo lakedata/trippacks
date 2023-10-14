@@ -57,14 +57,32 @@ public class LoginController {
         }
     }
 
-    @ApiOperation(value = "사용자 조회", notes = "사용자Id로 사용자정보 조회")
-    @GetMapping("/{userId}")
+    @ApiOperation(value = "UserCode로 사용자 조회", notes = "사용자Id로 사용자정보 조회")
+    @GetMapping("find/{userId}")
     public BaseResponse<String> getUser(@PathVariable("userId") Long id) {
 
         try {
             String user = String.valueOf(userService.findById(id));
 
             if (userService.findById(id) == null) {
+                return new BaseResponse<>(INVALID_USER);
+            }
+
+            return new BaseResponse<>(user);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+    @ApiOperation(value = "KakaoId로 사용자 조회", notes = "KakaoId로 사용자정보 조회")
+    @GetMapping("/{kakaoId}")
+    public BaseResponse<String> getKakaoUser(@PathVariable("kakaoId") Long id) {
+
+        try {
+            String user = String.valueOf(userService.findByKakaoId(id));
+
+            if (userService.findByKakaoId(id) == null) {
                 return new BaseResponse<>(INVALID_USER);
             }
 

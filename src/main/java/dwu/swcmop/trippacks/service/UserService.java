@@ -140,5 +140,9 @@ public class UserService {
         return userRepository.findByUserCode(id);
     }
 
+    public User findByKakaoId(Long id) {
+        return userRepository.findByKakaoId(id);
+    }
+
 
 }
