@@ -70,5 +70,13 @@ public class BagService {
         bagRepository.delete(bag);
     }
 
+    //가방 종료
+    @Transactional
+    public Bag closeBag(Long id){
+        Bag bag = bagRepository.findByBagId(id);
+        if(bag == null) new ResourceNotFoundException("Bag", "id", id);
+        bag.setStatus(BagStatus.FINISHED);
+        return bag;
+    }
 
 }

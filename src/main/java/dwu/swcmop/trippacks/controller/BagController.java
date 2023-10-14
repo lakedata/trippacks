@@ -42,4 +42,8 @@ public class BagController {
         bagService.deleteBag(id);
     }
 
+    @PutMapping("/bag/close/{id}")
+    public Bag closeBag(@PathVariable("id") Long id){
+        return bagService.closeBag(id);
+    }
 }
