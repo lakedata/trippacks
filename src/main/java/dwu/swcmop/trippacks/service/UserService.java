@@ -120,6 +120,18 @@ public class UserService {
         }
     }
 
+    public void deleteKakaoUser(Long id) throws BaseException {
+        try {
+            User user = userRepository.findByKakaoId(id);
+
+            userRepository.delete(user);
+
+        } catch (ExpiredJwtException exception) {
+            // 예외가 발생한 경우에 대한 처리
+            throw new BaseException(INVALID_JWT);
+        }
+    }
+
     public Long extractId(String token) {// "Bearer " 접두어를 제거해서 넣음
         Long userCode = JWT.require(Algorithm.HMAC512(JwtProperties.SECRET)).build().verify(token)
                 .getClaim("id").asLong();
