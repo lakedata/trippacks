@@ -5,9 +5,11 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dwu.swcmop.trippacks.config.BaseException;
+import dwu.swcmop.trippacks.entity.Friend;
 import dwu.swcmop.trippacks.entity.User;
 import dwu.swcmop.trippacks.config.jwt.JwtProperties;
 import dwu.swcmop.trippacks.model.oauth.KakaoProfile;
+import dwu.swcmop.trippacks.repository.FriendRepository;
 import dwu.swcmop.trippacks.repository.UserRepository;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -17,11 +19,13 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 import static dwu.swcmop.trippacks.config.BaseResponseStatus.EMPTY_JWT;
@@ -33,6 +37,8 @@ public class UserService {
     @Autowired
     UserRepository userRepository; //(1)
 
+    @Autowired
+    private FriendRepository friendRepository;
 
     public String saveUserAndGetToken(Long kakaoId, String kakaoProfileImg, String kakaoNickname, String kakaoEmail, String userRole) {
         User user = userRepository.findByKakaoEmail(kakaoEmail);
@@ -110,6 +116,7 @@ public class UserService {
         try {
             Optional<User> user = userRepository.findById(id);
             if (user.isPresent()) {
+                //            friendRepository.deleteAllByUserIdOrFriendId(id, id);
                 userRepository.delete(user.get());
             } else {
                 throw new BaseException(EMPTY_JWT);
@@ -120,10 +127,13 @@ public class UserService {
         }
     }
 
+    @Transactional
     public void deleteKakaoUser(Long id) throws BaseException {
         try {
             User user = userRepository.findByKakaoId(id);
+            Long userCode = user.getUserCode();
 
+            friendRepository.deleteAllByUserIdOrFriendId(userCode, userCode);
             userRepository.delete(user);
 
         } catch (ExpiredJwtException exception) {
