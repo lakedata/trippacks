@@ -41,7 +41,7 @@ public class LoginController {
         return ResponseEntity.ok().headers(headers).body("success");
     }
 
-    @ApiOperation(value = "카카오 회원탈퇴", notes = "JWT로 사용자id 받아와 DB삭제")
+    @ApiOperation(value = "JWT로 회원탈퇴", notes = "JWT로 사용자Id 받아와 DB삭제")
     @DeleteMapping("/delete")
     public BaseResponse<String> deleteUser(@RequestParam("Authorization") String accessToken) {
         try {
@@ -56,6 +56,22 @@ public class LoginController {
             return new BaseResponse<>((exception.getStatus()));
         }
     }
+
+    @ApiOperation(value = "kakaoId로 회원탈퇴", notes = "kakaoId 받아와 DB삭제")
+    @DeleteMapping("/delete/{kakaoId}")
+    public BaseResponse<String> deleteKakaoUser(@PathVariable("kakaoId") Long id) {
+        try {
+            userService.deleteKakaoUser(id);
+
+            String result = "삭제되었습니다.";
+
+            return new BaseResponse<>(result);
+
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
 
     @ApiOperation(value = "UserCode로 사용자 조회", notes = "사용자Id로 사용자정보 조회")
     @GetMapping("find/{userId}")

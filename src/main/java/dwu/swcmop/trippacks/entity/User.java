@@ -7,6 +7,8 @@ import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import java.security.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity//JPA가 데이터 바인딩
 @Data
@@ -38,6 +40,9 @@ public class User {
     @CreatedDate//DB에서 current_timestamp설정시 사용
     private Timestamp createTime;//유저 관리용 시간
 
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Bag> bags = new ArrayList<>();
+
     @Builder
     public User(Long kakaoId, String kakaoProfileImg, String kakaoNickname,
                 String kakaoEmail, String userRole) {
@@ -49,26 +54,3 @@ public class User {
         this.userRole = userRole;
     }
 }
-//user db바꿔서 연관되어있는 db나중에 수정 예정..(아직 안함)
-
-//    @Entity
-//    @Table(name = "users")
-//    public class User {
-//        @Id
-//        @GeneratedValue(strategy = GenerationType.IDENTITY)
-//        @Column(name = "user_id")
-//        private Long userId;
-//
-//        @Column(name = "kakao_email")
-//        private String kakaoEmail;
-//
-//        @Column(name = "kakao_name")
-//        private String kakaoName;
-//
-//        @Column(name = "kakao_password")
-//        private String kakaoPassword;
-//
-//        @Column(name = "profile_url")
-//        private String profileUrl;
-//
-//    }
