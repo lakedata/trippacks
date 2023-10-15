@@ -16,4 +16,12 @@ public interface FriendRepository extends JpaRepository<Friend, Long> {
 
     List<Friend> findUserEntityByUserId(Long userId);
 
+    // 사용자 ID에 해당하는 친구 목록을 반환하는 메서드
+    List<Friend> findByUserIdAndIsFriend(Long userId, Boolean isFriend);
+
+    // 친구 ID에 해당하는 친구 목록을 반환하는 메서드
+    List<Friend> findByFriendIdAndIsFriend(Long friendId, Boolean isFriend);
+
+    void deleteAllByUserIdOrFriendId(Long userId, Long friendId);
+
 }

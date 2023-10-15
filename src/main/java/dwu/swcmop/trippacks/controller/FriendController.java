@@ -16,8 +16,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static dwu.swcmop.trippacks.config.BaseResponseStatus.ACCEPT_FRIEND_FAIL;
 import static dwu.swcmop.trippacks.config.BaseResponseStatus.DELETE_FRIEND_FAIL;
@@ -67,16 +69,27 @@ public class FriendController {
 
     @GetMapping("/friendList/{userId}")
     @Operation(summary = "친구 list 조회", description = "내 Id를 입력받아 친구 목록 조회한다.")
-    public BaseResponse<List<String>> getFriendsList(@PathVariable("userId") Long userId) {
+    public BaseResponse<List<Long>> getFriendsList(@PathVariable("userId") Long userId) {
         try {
-            List<Friend> friends = friendRepository.findUserEntityByUserId(userId);
+            List<Friend> friends = friendRepository.findByUserIdAndIsFriend(userId, true);
+            friends.addAll(friendRepository.findByFriendIdAndIsFriend(userId, true));
 
-            // Extract kakaoEmails from Friend objects
-            List<String> kakaoEmails = friends.stream()
-                    .map(Friend::getKakaoEmail)
+            List<Long> friendIds = friends.stream()
+                    .filter(friend -> friend.getIsFriend() != null && friend.getIsFriend())
+                    .flatMap(friend -> {
+                        List<Long> ids = new ArrayList<>();
+                        if (friend.getFriendId().equals(userId)) {
+                            ids.add(friend.getUserId());  // If friendId equals userId, add userId
+                        }
+                        if (friend.getUserId().equals(userId)) {
+                            ids.add(friend.getFriendId());  // If userId equals friendId, add friendId
+                        }
+                        return ids.stream();
+                    })
                     .collect(Collectors.toList());
 
-            return new BaseResponse<>(kakaoEmails);
+
+            return new BaseResponse<>(friendIds);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -100,16 +113,3 @@ public class FriendController {
         }
     }
 }
-
-//    @ApiOperation(value = "초대 링크를 발행합니다")
-//    @PostMapping("/links")
-//    public BaseResponse<BagResponse> create(@RequestBody @Valid BagRequest bagRequest) {
-//        try {
-//
-//            BagResponse bagResponse = bagService.createBag(bagRequest);
-//
-//            return new BaseResponse<>(bagResponse);
-//        } catch (BaseException e) {
-//            return new BaseResponse<>(e.getStatus());
-//        }
-//    }
