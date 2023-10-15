@@ -71,15 +71,17 @@ public class FriendService {
         if (user == null) {
             throw new BaseException(INVALID_JWT);
         }
-        Friend getFriend = friendRepository.findUserEntityByUserIdAndFriendId(Id, fId);
-        if (getFriend == null) {
+        Friend getFriend1 = friendRepository.findUserEntityByUserIdAndFriendId(Id, fId);
+        Friend getFriend2 = friendRepository.findUserEntityByUserIdAndFriendId(fId, Id); // fId를 기반으로 찾기
+
+        if (getFriend1 != null) {
+            friendRepository.delete(getFriend1); // Id, fId
+        } else if (getFriend2 != null) {
+            friendRepository.delete(getFriend2); // fId, Id
+        } else {
             throw new BaseException(FRIEND_IS_EMPTY);
         }
-        try {
-            friendRepository.delete(getFriend);
-        } catch (Exception e) {
-            throw new BaseException(DELETE_FRIEND_FAIL);
-        }
+
         return 1;
     }
 
