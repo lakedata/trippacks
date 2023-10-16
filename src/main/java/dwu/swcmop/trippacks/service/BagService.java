@@ -26,7 +26,7 @@ public class BagService {
     //가방 생성
     @Transactional
     public Bag createBag(Long kakaoId, BagRequest request){
-        User user = userRepository.findByUserCode(kakaoId);
+        User user = userRepository.findByKakaoId(kakaoId); //변경
         Bag newBag = Bag.builder()
                 .user(user)
                 .location(request.getLocation())
@@ -41,7 +41,7 @@ public class BagService {
     //가방 조회
     @Transactional
     public List<Bag> findAllBag(Long kakaoId){
-        User user = userRepository.findByUserCode(kakaoId);
+        User user = userRepository.findByKakaoId(kakaoId);//변경
         return bagRepository.findAllByUser(user);
     }
 
