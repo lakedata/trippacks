@@ -25,8 +25,9 @@ public class Bag {
     @Column(name = "bag_id")
     private Long bagId;
 
+    @JsonBackReference
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "kakao_id")
     private User user;
 
     @Column(name = "status")

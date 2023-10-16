@@ -1,5 +1,6 @@
 package dwu.swcmop.trippacks.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -40,7 +41,9 @@ public class User {
     @CreatedDate//DB에서 current_timestamp설정시 사용
     private Timestamp createTime;//유저 관리용 시간
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    @OneToMany(mappedBy = "user",
+            fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Bag> bags = new ArrayList<>();
 
 
