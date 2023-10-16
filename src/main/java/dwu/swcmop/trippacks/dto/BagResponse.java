@@ -9,7 +9,7 @@ import lombok.*;
 @Setter
 public class BagResponse {
     private Long bagId;
-    //private Long userId;
+    private Long kakaoId;
     private String status;
     private String bagName;
     private String location;

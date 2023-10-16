@@ -15,7 +15,8 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@Getter @Setter
+@Getter
+@Setter
 @NoArgsConstructor
 @Table(name = "bag")
 public class Bag {
@@ -24,9 +25,8 @@ public class Bag {
     @Column(name = "bag_id")
     private Long bagId;
 
-    @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "kakao_id")
+    @JoinColumn(name = "user_id")
     private User user;
 
     @Column(name = "status")
@@ -46,13 +46,16 @@ public class Bag {
     private String endDate;
 
 
-    @JsonBackReference //슨환참조 방지
+    @JsonBackReference //순환참조 방지
     @OneToMany(mappedBy = "bag",
-                fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+            fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Pack> pack = new ArrayList<>();
 
+    @OneToMany(mappedBy = "bag", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Invitation> invitations = new ArrayList<>();
+
     @Builder
-    public Bag(User user, String location, String bagName, String startDate,String endDate){
+    public Bag(User user, String location, String bagName, String startDate, String endDate) {
         this.user = user;
         this.location = location;
         this.bagName = bagName;

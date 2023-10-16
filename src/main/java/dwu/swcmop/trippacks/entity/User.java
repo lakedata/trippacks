@@ -40,8 +40,9 @@ public class User {
     @CreatedDate//DB에서 current_timestamp설정시 사용
     private Timestamp createTime;//유저 관리용 시간
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Bag> bags = new ArrayList<>();
+
 
     @Builder
     public User(Long kakaoId, String kakaoProfileImg, String kakaoNickname,
