@@ -8,6 +8,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface BagRepository extends JpaRepository<Bag, Long> {
-    public List<Bag> findAllByUser(User user);
+    public List<Bag> findAllByKakaoId(Long kakaoId);
     public Bag findByBagId(Long id);
 }
