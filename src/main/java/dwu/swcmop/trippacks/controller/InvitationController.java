@@ -37,6 +37,7 @@ public class InvitationController {
     ) throws BaseException {
         Invitation invitation = invitationService.createOrUpdate((long) request.getBagId());
         InvitationResponse invitationResponse = InvitationMapper.INSTANCE.invitationToInvitationDTO(invitation);
+        invitationResponse.setBagId(Math.toIntExact(invitation.getBag().getBagId()));
 
         BaseResponse<InvitationResponse> response = new BaseResponse<>(invitationResponse);
         return new ResponseEntity<>(response, HttpStatus.OK);
@@ -47,6 +48,7 @@ public class InvitationController {
     public ResponseEntity<BaseResponse<InvitationResponse>> getInvitation(@PathVariable String slug) throws BaseException {
         Invitation invitation = invitationService.findOneBySlug(slug);
         InvitationResponse invitationResponse = InvitationMapper.INSTANCE.invitationToInvitationDTO(invitation);
+        invitationResponse.setBagId(Math.toIntExact(invitation.getBag().getBagId()));
 
         BaseResponse<InvitationResponse> response = new BaseResponse<>(invitationResponse);
         return new ResponseEntity<>(response, HttpStatus.OK);
