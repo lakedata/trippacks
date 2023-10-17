@@ -27,12 +27,14 @@ public class BagService {
     @Transactional
     public Bag createBag(Long kakaoId, BagRequest request){
         User user = userRepository.findByKakaoId(kakaoId); //변경
+        System.out.println(user);
         Bag newBag = Bag.builder()
                 .user(user)
                 .location(request.getLocation())
                 .bagName(request.getBagName())
                 .startDate(request.getStartDate())
                 .endDate(request.getEndDate())
+                .kakaoId(kakaoId)
                 .build();
         newBag.setStatus(BagStatus.AVAILABLE);
         return bagRepository.save(newBag);
@@ -41,8 +43,7 @@ public class BagService {
     //가방 조회
     @Transactional
     public List<Bag> findAllBag(Long kakaoId){
-        User user = userRepository.findByKakaoId(kakaoId);//변경
-        return bagRepository.findAllByUser(user);
+        return bagRepository.findAllByKakaoId(kakaoId);
     }
 
     @Transactional

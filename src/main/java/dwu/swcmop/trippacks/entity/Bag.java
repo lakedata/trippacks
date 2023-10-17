@@ -46,6 +46,8 @@ public class Bag {
     @Column(name = "end_date")
     private String endDate;
 
+    @Column(name = "kakao") //kakao_id -> kakao 변경
+    private Long kakaoId;
 
     @JsonBackReference //순환참조 방지
     @OneToMany(mappedBy = "bag",
@@ -56,11 +58,12 @@ public class Bag {
     private List<Invitation> invitations = new ArrayList<>();
 
     @Builder
-    public Bag(User user, String location, String bagName, String startDate, String endDate) {
+    public Bag(User user, String location, String bagName, String startDate, String endDate, Long kakaoId) {
         this.user = user;
         this.location = location;
         this.bagName = bagName;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.kakaoId = kakaoId;
     }
 }
