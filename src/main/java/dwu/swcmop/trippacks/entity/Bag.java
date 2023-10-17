@@ -1,7 +1,6 @@
 package dwu.swcmop.trippacks.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import dwu.swcmop.trippacks.dto.BagStatus;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,6 +12,7 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 
 @Entity
 @Getter
@@ -54,6 +54,7 @@ public class Bag {
             fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Pack> pack = new ArrayList<>();
 
+    @JsonBackReference //순환참조 방지
     @OneToMany(mappedBy = "bag", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Invitation> invitations = new ArrayList<>();
 
