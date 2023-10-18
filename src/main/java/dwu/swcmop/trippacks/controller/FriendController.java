@@ -38,7 +38,7 @@ public class FriendController {
     @Autowired
     private UserService userService;
 
-    @ApiOperation(value = "친구 추가", notes = "친구를 추가한다.")
+    @ApiOperation(value = "친구 추가", notes = "친구를 추가합니다.")
     @PostMapping("/add")
     public BaseResponse<FriendResponse> create(@RequestBody @Valid FriendRequest friendRequest) {
         try {
@@ -51,19 +51,53 @@ public class FriendController {
         }
     }
 
+    @GetMapping("/acceptRequest/{friendId}")
+    @Operation(summary = "친구 수락 확정 대기 목록 조회", description = "friendId(친구 요청 받은 사람 id)를 입력받아 친구 수락 확정 대기 중인 목록을 조회합니다.")
+    public BaseResponse<List<Long>> getFriendRequestsToAccept(@PathVariable("friendId") Long friendId) {
+        try {
+            List<Friend> friendRequestsToAccept = friendRepository.findByFriendIdAndIsFriend(friendId, false);
+
+            List<Long> userIdsToAccept = friendRequestsToAccept.stream()
+                    .filter(friend -> friend.getIsFriend() != null && !friend.getIsFriend())
+                    .map(friend -> friend.getUserId()) // Get the userId of the friend requests
+                    .collect(Collectors.toList());
+
+            return new BaseResponse<>(userIdsToAccept);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     //친구 수락
     @PatchMapping("/accept/{userId}/{friendId}")
-    @Operation(summary = "친구 수락", description = "사용자Id, 친구Id 입력받아 친구 수락합니다.")
+    @Operation(summary = "친구 수락 확정하기", description = "사용자Id, 친구Id 입력받아 친구 수락을 확정합니다.")
     public BaseResponse<String> acceptFriend(@PathVariable("userId") long Id, @PathVariable("friendId") long fId) {
         try {
             int result = friendService.acceptFriend(Id, fId);
             if (result != 1) {
                 throw new BaseException(ACCEPT_FRIEND_FAIL);
             } else {
-                return new BaseResponse<>("친구 수락에 성공했습니다.");
+                return new BaseResponse<>("친구 수락을 확정했습니다.");
             }
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+    @GetMapping("/friendRequests/{userId}")
+    @Operation(summary = "친구 수락 대기 중 목록 조회", description = "사용자Id(친구 요청 보낸 사람Id)를 입력받아 친구 수락 대기 중인 목록을 조회합니다.")
+    public BaseResponse<List<Long>> getFriendRequests(@PathVariable("userId") Long userId) {
+        try {
+            List<Friend> friendRequests = friendRepository.findByUserIdAndIsFriend(userId, false);
+
+            List<Long> friendRequestIds = friendRequests.stream()
+                    .filter(friend -> friend.getIsFriend() != null && !friend.getIsFriend())
+                    .map(friend -> friend.getFriendId())  // Get the friendId of the friend requests
+                    .collect(Collectors.toList());
+
+            return new BaseResponse<>(friendRequestIds);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -112,4 +146,6 @@ public class FriendController {
             return new BaseResponse<>(exception.getStatus());
         }
     }
+
+
 }
