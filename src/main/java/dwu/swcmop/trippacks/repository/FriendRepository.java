@@ -24,4 +24,9 @@ public interface FriendRepository extends JpaRepository<Friend, Long> {
 
     void deleteAllByUserIdOrFriendId(Long userId, Long friendId);
 
+//    List<Friend> findByUserIdAndFriendId(Long userId, Long friendId);
+    @Query("SELECT f FROM Friend f WHERE (f.userId = :userId AND f.friendId = :friendId) OR (f.userId = :friendId AND f.friendId = :userId)")
+    List<Friend> findFriendsWithUserIds(@Param("userId") Long userId, @Param("friendId") Long friendId);
+
+
 }
