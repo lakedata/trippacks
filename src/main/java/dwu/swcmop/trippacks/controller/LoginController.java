@@ -9,6 +9,7 @@ import dwu.swcmop.trippacks.repository.UserRepository;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -126,5 +127,19 @@ public class LoginController {
     public ResponseEntity<List<User>> getAllUsers() {
         List<User> users = userService.getAllUsers();
         return ResponseEntity.ok(users);
+    }
+
+    @ApiOperation(value = "kakaoNickname로 userCode 조회", notes = "kakaoNickname을 사용하여 해당 유저의 userCode를 조회합니다.")
+    @GetMapping("/find-usercode/{kakaoNickname}")
+    public ResponseEntity<Long> getUserCodeByNickname(@PathVariable("kakaoNickname") String kakaoNickname) {
+        System.out.println(kakaoNickname);
+
+        Long userCode = userService.findUserCodeByKakaoNickname(kakaoNickname);
+
+        if (userCode == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return ResponseEntity.ok(userCode);
     }
 }

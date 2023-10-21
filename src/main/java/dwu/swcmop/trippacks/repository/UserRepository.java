@@ -9,13 +9,16 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
-//    User save(User user);
+    //    User save(User user);
     // JPA findBy 규칙
     // select * from user_master where kakao_email = ?
     User findByKakaoEmail(String kakaoEmail);
 
-   User findByUserCode(Long userCode);
+    User findByUserCode(Long userCode);
 
     User findByKakaoId(Long kakaoId);
+
+    User findByKakaoNickname(String kakaoNickname);
+
     Optional<User> findById(Long userCode);
 }
