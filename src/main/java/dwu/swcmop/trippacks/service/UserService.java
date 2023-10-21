@@ -10,6 +10,7 @@ import dwu.swcmop.trippacks.entity.User;
 import dwu.swcmop.trippacks.config.jwt.JwtProperties;
 import dwu.swcmop.trippacks.model.oauth.KakaoProfile;
 import dwu.swcmop.trippacks.repository.FriendRepository;
+import dwu.swcmop.trippacks.repository.RequestRepository;
 import dwu.swcmop.trippacks.repository.UserRepository;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -39,6 +40,9 @@ public class UserService {
 
     @Autowired
     private FriendRepository friendRepository;
+
+    @Autowired
+    private RequestRepository requestRepository;
 
     public String saveUserAndGetToken(Long kakaoId, String kakaoProfileImg, String kakaoNickname, String kakaoEmail, String userRole) {
         User user = userRepository.findByKakaoEmail(kakaoEmail);
@@ -134,6 +138,8 @@ public class UserService {
             Long userCode = user.getUserCode();
 
             friendRepository.deleteAllByUserIdOrFriendId(userCode, userCode);
+            requestRepository.deleteByFromUserIdOrToFriendId(userCode, userCode);
+
             userRepository.delete(user);
 
         } catch (ExpiredJwtException exception) {

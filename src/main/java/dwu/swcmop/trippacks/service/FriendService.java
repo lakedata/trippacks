@@ -4,14 +4,18 @@ import dwu.swcmop.trippacks.config.BaseException;
 import dwu.swcmop.trippacks.dto.FriendRequest;
 import dwu.swcmop.trippacks.dto.FriendResponse;
 import dwu.swcmop.trippacks.entity.Friend;
+import dwu.swcmop.trippacks.entity.Request;
 import dwu.swcmop.trippacks.entity.User;
 import dwu.swcmop.trippacks.repository.FriendRepository;
+import dwu.swcmop.trippacks.repository.RequestRepository;
 import dwu.swcmop.trippacks.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.transaction.Transactional;
 
+
+import java.util.List;
 
 import static dwu.swcmop.trippacks.config.BaseResponseStatus.*;
 
@@ -23,6 +27,8 @@ public class FriendService {
     @Autowired
     private FriendRepository friendRepository;
 
+    @Autowired
+    private RequestRepository requestRepository;
     @Autowired
     private UserRepository userRepository;
 
@@ -80,6 +86,13 @@ public class FriendService {
             friendRepository.delete(getFriend2); // fId, Id
         } else {
             throw new BaseException(FRIEND_IS_EMPTY);
+        }
+
+        // Request 엔티티 삭제
+        List<Request> requests = requestRepository.findByFromUserIdAndToFriendIdOrFromUserIdAndToFriendId(Id, fId, fId, Id);
+
+        for (Request request : requests) {
+            requestRepository.delete(request);
         }
 
         return 1;
