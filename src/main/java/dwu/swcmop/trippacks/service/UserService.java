@@ -166,5 +166,7 @@ public class UserService {
         return userRepository.findByKakaoId(id);
     }
 
-
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
 }
