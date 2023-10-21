@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
+import java.util.List;
+
 import static dwu.swcmop.trippacks.config.BaseResponseStatus.INVALID_USER;
 
 @RestController //(1)
@@ -41,21 +43,21 @@ public class LoginController {
         return ResponseEntity.ok().headers(headers).body("success");
     }
 
-    @ApiOperation(value = "JWT로 회원탈퇴", notes = "JWT로 사용자Id 받아와 DB삭제")
-    @DeleteMapping("/delete")
-    public BaseResponse<String> deleteUser(@RequestParam("Authorization") String accessToken) {
-        try {
-            Long Id = userService.extractId(accessToken);
-            userService.deleteUser(Id);
-
-            String result = "삭제되었습니다.";
-
-            return new BaseResponse<>(result);
-
-        } catch (BaseException exception) {
-            return new BaseResponse<>((exception.getStatus()));
-        }
-    }
+//    @ApiOperation(value = "JWT로 회원탈퇴", notes = "JWT로 사용자Id 받아와 DB삭제")
+//    @DeleteMapping("/delete")
+//    public BaseResponse<String> deleteUser(@RequestParam("Authorization") String accessToken) {
+//        try {
+//            Long Id = userService.extractId(accessToken);
+//            userService.deleteUser(Id);
+//
+//            String result = "삭제되었습니다.";
+//
+//            return new BaseResponse<>(result);
+//
+//        } catch (BaseException exception) {
+//            return new BaseResponse<>((exception.getStatus()));
+//        }
+//    }
 
     @ApiOperation(value = "kakaoId로 회원탈퇴", notes = "kakaoId 받아와 DB삭제")
     @DeleteMapping("/delete/{kakaoId}")
@@ -109,15 +111,20 @@ public class LoginController {
     }
 
 
-    // jwt 토큰으로 유저정보 요청하기
-    @ApiOperation(value = "사용자 정보", notes = "HttpServletRequest로 사용자 정보 가져오기.")
-    @GetMapping("/me")
-    public ResponseEntity<Object> getCurrentUser(HttpServletRequest request) {
+//    // jwt 토큰으로 유저정보 요청하기
+//    @ApiOperation(value = "사용자 정보", notes = "HttpServletRequest로 사용자 정보 가져오기.")
+//    @GetMapping("/me")
+//    public ResponseEntity<Object> getCurrentUser(HttpServletRequest request) {
+//
+//        User user = userService.getUser(request);
+//
+//        return ResponseEntity.ok().body(user);
+//    }
 
-        User user = userService.getUser(request);
-
-        return ResponseEntity.ok().body(user);
+    @ApiOperation(value = "모든 사용자 조회", notes = "DB에 있는 모든 사용자정보를 조회합니다.")
+    @GetMapping("/all-users")
+    public ResponseEntity<List<User>> getAllUsers() {
+        List<User> users = userService.getAllUsers();
+        return ResponseEntity.ok(users);
     }
-
-
 }
