@@ -80,4 +80,13 @@ public class BagService {
         return bag;
     }
 
+    //가방 오픈
+    @Transactional
+    public Bag openBag(Long id){
+        Bag bag = bagRepository.findByBagId(id);
+        if(bag == null) new ResourceNotFoundException("Bag", "id", id);
+        bag.setStatus(BagStatus.AVAILABLE);
+        return bag;
+    }
+
 }
