@@ -56,4 +56,10 @@ public class RequestService {
             // 요청이 존재하지 않음을 처리
         }
     }
+
+    //사용자 탈퇴시, 요청도 함꼐 삭제
+    public void deleteRequestByUser(Long toFriendId){
+
+    }
+    //친구 삭제시, 요청도 함께 삭제
 }

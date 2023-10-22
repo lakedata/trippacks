@@ -37,8 +37,11 @@ public class Pack {
     @Column(name = "is_personal")
     private Boolean isPersonal;
 
+    @Column(name = "is_completed")
+    private Boolean completed;
+
     @Builder
-    public Pack(Bag bag, String packName, Boolean isRequired){
+    public Pack(Bag bag, String packName, Boolean isRequired, Boolean completed){
         this.bag = bag;
         this.packName = packName;
         if(isRequired == true){
@@ -49,6 +52,7 @@ public class Pack {
             this.isPersonal = true;
             this.isRequired = false;
         }
+        this.completed = completed;
     }
 
 }

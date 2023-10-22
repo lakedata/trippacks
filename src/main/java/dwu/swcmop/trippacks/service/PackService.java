@@ -31,6 +31,7 @@ public class PackService {
                 .bag(bag)
                 .packName(request.getPackName())
                 .isRequired(request.getIsRequired())
+                .completed(request.getCompleted())
                 .build();
         return packRepository.save(pack);
     }
@@ -55,6 +56,7 @@ public class PackService {
         if(pack == null) new ResourceNotFoundException("Pack", "id", id);
         pack.setPackName(newPack.getPackName());
         pack.setIsRequired(newPack.getIsRequired());
+        pack.setCompleted(newPack.getCompleted());
         if(newPack.getIsRequired() == true)
             pack.setIsPersonal(false);
         else pack.setIsPersonal(true);
