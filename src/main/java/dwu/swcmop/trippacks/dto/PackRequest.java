@@ -7,4 +7,5 @@ public class PackRequest {
     private Long bagId;
     private String packName;
     private Boolean isRequired;
+    private Boolean completed;
 }
