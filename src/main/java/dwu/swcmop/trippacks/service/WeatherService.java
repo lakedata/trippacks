@@ -32,10 +32,13 @@ public class WeatherService {
 
         Weather nowDiary = new Weather();
         nowDiary.setWeather(parsedWeather.get("main").toString());
-        nowDiary.setTemperature((Double) parsedWeather.get("temp"));
+        nowDiary.setTemperature((Double) parsedWeather.get("temp") - 273.15);
+
 
         return nowDiary;
     }
+
+
 
     private String getWeatherString(String city){
         String apiUrl = "https://api.openweathermap.org/data/2.5/weather?q="+city+"&appid=" + apiKey;
