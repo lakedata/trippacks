@@ -15,7 +15,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static dwu.swcmop.trippacks.config.BaseResponseStatus.INVALID_USER;
 
@@ -78,16 +81,20 @@ public class LoginController {
 
     @ApiOperation(value = "UserCode로 사용자 조회", notes = "사용자Id로 사용자정보 조회")
     @GetMapping("find/{userId}")
-    public BaseResponse<String> getUser(@PathVariable("userId") Long id) {
+    public ResponseEntity<Map<String, String>> getUser(@PathVariable("userId") Long id) {
 
         try {
-            String user = String.valueOf(userService.findById(id));
+            User user = userService.findById(id);
 
-            if (userService.findById(id) == null) {
-                return new BaseResponse<>(INVALID_USER);
+            if (user == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.singletonMap("result", "User not found"));
             }
 
-            return new BaseResponse<>(user);
+            Map<String, String> result = new HashMap<>();
+            result.put("kakaoNickname", user.getKakaoNickname());
+            result.put("kakaoProfileImg", user.getKakaoProfileImg());
+
+            return ResponseEntity.ok(result);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
