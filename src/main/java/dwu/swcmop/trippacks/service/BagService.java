@@ -89,4 +89,13 @@ public class BagService {
         return bag;
     }
 
+    @Transactional
+    public List<Bag> findClosedBagsByKakaoId(Long kakaoId) {
+        return bagRepository.findAllByKakaoIdAndStatus(kakaoId, BagStatus.FINISHED);
+    }
+
+    @Transactional
+    public List<Bag> findOpenBagsByKakaoId(Long kakaoId) {
+        return bagRepository.findAllByKakaoIdAndStatus(kakaoId, BagStatus.AVAILABLE);
+    }
 }
