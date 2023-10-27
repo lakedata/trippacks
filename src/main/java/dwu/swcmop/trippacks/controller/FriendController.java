@@ -5,7 +5,9 @@ import dwu.swcmop.trippacks.config.BaseResponse;
 import dwu.swcmop.trippacks.dto.FriendRequest;
 import dwu.swcmop.trippacks.dto.FriendResponse;
 import dwu.swcmop.trippacks.entity.Friend;
+import dwu.swcmop.trippacks.entity.User;
 import dwu.swcmop.trippacks.repository.FriendRepository;
+import dwu.swcmop.trippacks.repository.UserRepository;
 import dwu.swcmop.trippacks.service.FriendService;
 import dwu.swcmop.trippacks.service.UserService;
 import io.swagger.annotations.ApiOperation;
@@ -36,6 +38,9 @@ public class FriendController {
     private FriendRepository friendRepository;
 
     @Autowired
+    private  UserRepository userRepository;
+
+    @Autowired
     private UserService userService;
 
     @ApiOperation(value = "친구 추가", notes = "친구를 추가합니다.")
@@ -53,16 +58,18 @@ public class FriendController {
 
     @GetMapping("/acceptRequest/{friendId}")
     @Operation(summary = "친구 수락 확정 대기 목록 조회", description = "friendId(친구 요청 받은 사람 id)를 입력받아 친구 수락 확정 대기 중인 목록을 조회합니다.")
-    public BaseResponse<List<Long>> getFriendRequestsToAccept(@PathVariable("friendId") Long friendId) {
+    public BaseResponse<List<User>> getFriendRequestsToAccept(@PathVariable("friendId") Long friendId) {
         try {
             List<Friend> friendRequestsToAccept = friendRepository.findByFriendIdAndIsFriend(friendId, false);
 
-            List<Long> userIdsToAccept = friendRequestsToAccept.stream()
+            List<Long> userCodesToAccept = friendRequestsToAccept.stream()
                     .filter(friend -> friend.getIsFriend() != null && !friend.getIsFriend())
                     .map(friend -> friend.getUserId()) // Get the userId of the friend requests
                     .collect(Collectors.toList());
+            // Fetch user details for the user codes
+            List<User> userRequestsToAccept = userRepository.findByUserCodeIn(userCodesToAccept);
 
-            return new BaseResponse<>(userIdsToAccept);
+            return new BaseResponse<>(userRequestsToAccept);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -86,16 +93,19 @@ public class FriendController {
 
     @GetMapping("/friendRequests/{userId}")
     @Operation(summary = "친구 수락 대기 중 목록 조회", description = "사용자Id(친구 요청 보낸 사람Id)를 입력받아 친구 수락 대기 중인 목록을 조회합니다.")
-    public BaseResponse<List<Long>> getFriendRequests(@PathVariable("userId") Long userId) {
+    public BaseResponse<List<User>> getFriendRequests(@PathVariable("userId") Long userId) {
         try {
             List<Friend> friendRequests = friendRepository.findByUserIdAndIsFriend(userId, false);
 
-            List<Long> friendRequestIds = friendRequests.stream()
+            List<Long> userCodes = friendRequests.stream()
                     .filter(friend -> friend.getIsFriend() != null && !friend.getIsFriend())
                     .map(friend -> friend.getFriendId())  // Get the friendId of the friend requests
                     .collect(Collectors.toList());
 
-            return new BaseResponse<>(friendRequestIds);
+            // Fetch user details for the user codes
+            List<User> friendRequestDetails = userRepository.findByUserCodeIn(userCodes);
+
+            return new BaseResponse<>(friendRequestDetails);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -103,12 +113,12 @@ public class FriendController {
 
     @GetMapping("/friendList/{userId}")
     @Operation(summary = "친구 list 조회", description = "내 Id를 입력받아 친구 목록 조회한다.")
-    public BaseResponse<List<Long>> getFriendsList(@PathVariable("userId") Long userId) {
+    public BaseResponse<List<User>> getFriendsList(@PathVariable("userId") Long userId) {
         try {
             List<Friend> friends = friendRepository.findByUserIdAndIsFriend(userId, true);
             friends.addAll(friendRepository.findByFriendIdAndIsFriend(userId, true));
 
-            List<Long> friendIds = friends.stream()
+            List<Long> userCodes = friends.stream()
                     .filter(friend -> friend.getIsFriend() != null && friend.getIsFriend())
                     .flatMap(friend -> {
                         List<Long> ids = new ArrayList<>();
@@ -122,8 +132,10 @@ public class FriendController {
                     })
                     .collect(Collectors.toList());
 
+            // Fetch user details for the user codes
+            List<User> friendDetails = userRepository.findByUserCodeIn(userCodes);
 
-            return new BaseResponse<>(friendIds);
+            return new BaseResponse<>(friendDetails);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
