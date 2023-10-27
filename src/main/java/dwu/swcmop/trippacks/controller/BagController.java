@@ -22,6 +22,15 @@ public class BagController {
         return bagService.findAllBag(kakaoId);
     }
 
+    @GetMapping("/closedBags")
+    public List<Bag> getClosedBagsForKakaoId(@RequestParam Long kakaoId) {
+        return bagService.findClosedBagsByKakaoId(kakaoId);
+    }
+    @GetMapping("/openBags")
+    public List<Bag> getOpenBagsForKakaoId(@RequestParam Long kakaoId) {
+        return bagService.findOpenBagsByKakaoId(kakaoId);
+    }
+
     @GetMapping("/bag/{id}")
     public Bag getBag(@PathVariable("id") Long id){
         return bagService.findBag(id);
