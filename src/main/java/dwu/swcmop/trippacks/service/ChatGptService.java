@@ -5,22 +5,28 @@ import dwu.swcmop.trippacks.dto.ChatGptRequest;
 import dwu.swcmop.trippacks.dto.ChatGptResponse;
 import dwu.swcmop.trippacks.dto.QuestionRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
+import org.springframework.http.client.ClientHttpResponse;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.DefaultResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
+
+import java.io.IOException;
 
 @Service
 public class ChatGptService {
 
-    private static RestTemplate restTemplate = new RestTemplate();
+    RestTemplate restTemplate = new RestTemplate();
+
     private final ChatGptConfig chatGptConfig;
+
+
 
     @Autowired
     public ChatGptService(ChatGptConfig chatGptConfig) {
         this.chatGptConfig = chatGptConfig;
+
     }
 
 

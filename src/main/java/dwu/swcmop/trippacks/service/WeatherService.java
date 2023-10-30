@@ -34,7 +34,6 @@ public class WeatherService {
         nowDiary.setWeather(parsedWeather.get("main").toString());
         nowDiary.setTemperature((Double) parsedWeather.get("temp") - 273.15);
 
-
         return nowDiary;
     }
 

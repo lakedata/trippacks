@@ -9,7 +9,7 @@ public class ChatGptConfig {
     public static final String BEARER = "Bearer ";
 
     @Value("${chatGpt.key}")
-    public String API_KEY; //실행시 원래 api key로 바꾸고, git에 올릴 때에는 임의 값으로 다시 설정!
+    public String API_KEY;
     public static final String MODEL = "text-davinci-003";
     public static final Integer MAX_TOKEN = 300;
     public static final Double TEMPERATURE = 0.0;
