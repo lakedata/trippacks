@@ -37,6 +37,7 @@ public class WeatherService {
         double temperature = (Double) parsedWeather.get("temp") - 273.15;
         temperature = Math.round(temperature * 100.0) / 100.0;
         nowDiary.setTemperature(temperature);
+        nowDiary.setIcon(parsedWeather.get("icon").toString()); // Set the icon value
 
         return nowDiary;
     }
