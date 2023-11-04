@@ -57,6 +57,11 @@ public class UserService {
                     .build();
 
             userRepository.save(user);
+        }else {
+            // Update
+            user.setKakaoProfileImg(kakaoProfileImg);
+            user.setKakaoNickname(kakaoNickname);
+            userRepository.save(user);
         }
 
         return createToken(user); //(2)
