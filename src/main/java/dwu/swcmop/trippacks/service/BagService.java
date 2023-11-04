@@ -46,7 +46,19 @@ public class BagService {
     //가방 조회
     @Transactional
     public List<Bag> findAllBag(Long kakaoId){
-        return bagRepository.findAllByKakaoId(kakaoId);
+        List<Bag> allBags = bagRepository.findAllByKakaoId(kakaoId);
+
+        allBags.sort(Comparator.comparing(bag -> {
+            try {
+                return new SimpleDateFormat("yyyy-MM-dd").parse(bag.getStartDate());
+            } catch (ParseException e) {
+                // 파싱 예외를 처리합니다.
+                e.printStackTrace();
+                return null;
+            }
+        }));
+
+        return allBags;
     }
 
     @Transactional
