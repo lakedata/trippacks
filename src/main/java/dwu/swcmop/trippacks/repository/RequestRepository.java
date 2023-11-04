@@ -6,10 +6,14 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+
 @Repository
 public interface RequestRepository extends JpaRepository<Request, Long> {
     List<Request> findByToFriendId(Long toFriendId);
+
     List<Request> findByFromUserIdAndToFriendIdOrFromUserIdAndToFriendId(Long fromUserId1, Long toFriendId1, Long fromUserId2, Long toFriendId2);
+
+    List<Request> findByBag_BagId(Long bagId);
 
     @Transactional
     void deleteByFromUserIdOrToFriendId(Long fromUserId, Long toFriendId);
