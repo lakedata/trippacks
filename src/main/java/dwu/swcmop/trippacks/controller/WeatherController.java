@@ -33,6 +33,7 @@ public class WeatherController {
             Map<String, Object> response = new HashMap<>();
             response.put("weather", weather.getWeather());
             response.put("temperature", weather.getTemperature());
+            response.put("icon", weather.getIcon()); // Include the icon information
             return new ResponseEntity<>(response, HttpStatus.OK);
         } else {
             return new ResponseEntity<>("Weather data not found", HttpStatus.NOT_FOUND);

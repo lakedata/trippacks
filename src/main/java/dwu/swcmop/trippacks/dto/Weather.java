@@ -16,4 +16,5 @@ import java.time.LocalDate;
 public class Weather {
     private String weather;
     private double temperature;
+    private String icon;
 }
