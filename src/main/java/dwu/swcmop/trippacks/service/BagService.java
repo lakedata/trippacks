@@ -12,7 +12,10 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -91,11 +94,35 @@ public class BagService {
 
     @Transactional
     public List<Bag> findClosedBagsByKakaoId(Long kakaoId) {
-        return bagRepository.findAllByKakaoIdAndStatus(kakaoId, BagStatus.FINISHED);
+        List<Bag> closeBags = bagRepository.findAllByKakaoIdAndStatus(kakaoId, BagStatus.FINISHED);
+        closeBags.sort(Comparator.comparing(bag -> {
+            try {
+                return new SimpleDateFormat("yyyy-MM-dd").parse(bag.getStartDate());
+            } catch (ParseException e) {
+                // 파싱 예외를 처리합니다.
+                e.printStackTrace();
+                return null;
+            }
+        }));
+
+        return closeBags;
     }
 
     @Transactional
     public List<Bag> findOpenBagsByKakaoId(Long kakaoId) {
-        return bagRepository.findAllByKakaoIdAndStatus(kakaoId, BagStatus.AVAILABLE);
+        List<Bag> openBags = bagRepository.findAllByKakaoIdAndStatus(kakaoId, BagStatus.AVAILABLE);
+
+        // startDate를 기준으로 가방을 정렬합니다.
+        openBags.sort(Comparator.comparing(bag -> {
+            try {
+                return new SimpleDateFormat("yyyy-MM-dd").parse(bag.getStartDate());
+            } catch (ParseException e) {
+                // 파싱 예외를 처리합니다.
+                e.printStackTrace();
+                return null;
+            }
+        }));
+
+        return openBags;
     }
 }
