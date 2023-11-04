@@ -88,7 +88,7 @@ public class RequestController {
     }
 
     @Operation(summary = "짐 요청 삭제", description = "짐 요청을 삭제합니다.")
-    @PostMapping("/deleteRequest")
+    @DeleteMapping("/deleteRequest")
     public void deleteRequest(@RequestParam Long requestId) {
         requestService.deleteRequest(requestId);
     }
