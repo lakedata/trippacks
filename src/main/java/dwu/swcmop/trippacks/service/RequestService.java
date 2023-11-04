@@ -1,12 +1,16 @@
 package dwu.swcmop.trippacks.service;
 
+import dwu.swcmop.trippacks.dto.RequestWithUserInfo;
 import dwu.swcmop.trippacks.entity.Friend;
 import dwu.swcmop.trippacks.entity.Request;
+import dwu.swcmop.trippacks.entity.User;
 import dwu.swcmop.trippacks.repository.FriendRepository;
 import dwu.swcmop.trippacks.repository.RequestRepository;
+import dwu.swcmop.trippacks.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,12 +18,14 @@ import java.util.Optional;
 public class RequestService {
     private final RequestRepository requestRepository;
     private final FriendRepository friendRepository;
+    private final UserRepository userRepository;
 
 
     @Autowired
-    public RequestService(RequestRepository requestRepository, FriendRepository friendRepository) {
+    public RequestService(RequestRepository requestRepository, FriendRepository friendRepository, UserRepository userRepository) {
         this.requestRepository = requestRepository;
         this.friendRepository = friendRepository;
+        this.userRepository = userRepository;
     }
 
     public Request createRequest(Request request) {
@@ -32,8 +38,24 @@ public class RequestService {
         }
     }
 
-    public List<Request> getRequestsByToFriendId(Long toFriendId) {
-        return requestRepository.findByToFriendId(toFriendId);
+    public List<RequestWithUserInfo> getRequestsByToFriendId(Long toFriendId) {
+        List<Request> requests = requestRepository.findByToFriendId(toFriendId);
+        List<RequestWithUserInfo> requestsWithUserInfo = new ArrayList<>();
+
+        for (Request request : requests) {
+            Long fromUserId = request.getFromUserId();
+            toFriendId = request.getToFriendId();
+
+            // fromUserId와 toFriendId를 사용하여 사용자 정보 가져오기
+            User fromUser = userRepository.findById(fromUserId).orElse(null);
+            User toFriend = userRepository.findById(toFriendId).orElse(null);
+
+            // RequestWithUserInfo에 정보를 추가
+            RequestWithUserInfo requestWithUserInfo = new RequestWithUserInfo(request, fromUser, toFriend);
+            requestsWithUserInfo.add(requestWithUserInfo);
+        }
+
+        return requestsWithUserInfo;
     }
 
     public Request acceptRequest(Long requestId) {
@@ -58,7 +80,7 @@ public class RequestService {
     }
 
     //사용자 탈퇴시, 요청도 함꼐 삭제
-    public void deleteRequestByUser(Long toFriendId){
+    public void deleteRequestByUser(Long toFriendId) {
 
     }
     //친구 삭제시, 요청도 함께 삭제

@@ -55,6 +55,12 @@ public class Bag {
     private List<Pack> pack = new ArrayList<>();
 
     @JsonBackReference //순환참조 방지
+    @OneToMany(mappedBy = "bag",
+            fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Request> request = new ArrayList<>();
+
+
+    @JsonBackReference //순환참조 방지
     @OneToMany(mappedBy = "bag", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Invitation> invitations = new ArrayList<>();
 

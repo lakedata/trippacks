@@ -1,13 +1,18 @@
 package dwu.swcmop.trippacks.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.type.TypeFactory;
 
 import javax.persistence.*;
 
+
 @Entity
-@Getter
-@Setter
+@Getter @Setter
+@NoArgsConstructor
 @Table(name = "request")
 public class Request {
     @Id
@@ -26,5 +31,21 @@ public class Request {
 
     @Column(name = "is_ok")
     private Boolean isOk;
+
+
+    @ManyToOne
+    @JoinColumn(name = "bag_id")
+    @JsonManagedReference // 순환참조 방지
+    private Bag bag;
+
+    @Builder
+    public Request(Long requestId, String requestedProduct, Long fromUserId, Long toFriendId, Boolean isOk, Bag bag) {
+        this.requestId = requestId;
+        this.requestedProduct = requestedProduct;
+        this.fromUserId = fromUserId;
+        this.toFriendId = toFriendId;
+        this.isOk = isOk;
+        this.bag = bag;
+    }
 }
 
