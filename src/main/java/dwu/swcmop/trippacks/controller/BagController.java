@@ -17,9 +17,15 @@ import java.util.Optional;
 public class BagController {
     private BagService bagService;
 
+    //가방 조회
     @GetMapping("/bag/list")
     public List<Bag> getBagList(@RequestParam Long kakaoId){
         return bagService.findAllBag(kakaoId);
+    }
+
+    @GetMapping("/bag/latestlist")
+    public List<Bag> getBaglatestList(@RequestParam Long kakaoId){
+        return bagService.findAlllatestBag(kakaoId);
     }
 
     @GetMapping("/closedBags")
