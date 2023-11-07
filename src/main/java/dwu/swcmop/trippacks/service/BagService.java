@@ -15,10 +15,9 @@ import javax.transaction.Transactional;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+
+import org.springframework.data.domain.Sort;
 
 
 @Service
@@ -82,7 +81,10 @@ public class BagService {
         return allBags;
     }
     public List<Bag> findAlllatestBag(Long kakaoId){
-        return bagRepository.findAllByKakaoId(kakaoId);
+        List<Bag> bags = bagRepository.findAllByKakaoId(kakaoId);
+        Collections.reverse(bags); // Reverse the list
+
+        return bags;
     }
 
     @Transactional
