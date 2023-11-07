@@ -56,6 +56,8 @@ dependencies {
 
 	//json
 	implementation 'com.googlecode.json-simple:json-simple:1.1.1'
+	implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.0' // 현재 Jackson 버전으로 업데이트
+
 
 	//mapper
 	implementation 'org.mapstruct:mapstruct:1.5.5.Final'

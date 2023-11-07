@@ -1,15 +1,18 @@
 package dwu.swcmop.trippacks.controller;
 
 import dwu.swcmop.trippacks.dto.BagRequest;
-import dwu.swcmop.trippacks.dto.PackRequest;
+import dwu.swcmop.trippacks.dto.TripInfo;
 import dwu.swcmop.trippacks.entity.Bag;
-import dwu.swcmop.trippacks.entity.Pack;
 import dwu.swcmop.trippacks.service.BagService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -65,5 +68,27 @@ public class BagController {
     @PutMapping("/bag/open/{id}")
     public Bag openBag(@PathVariable("id") Long id){
         return bagService.openBag(id);
+    }
+
+    //여행정보
+    @GetMapping(value = "/bag/trip-info/{kakaoId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public TripInfo getTripInfo(@PathVariable("kakaoId") Long kakaoId) {
+        List<Bag> bags = bagService.findAlllatestBag(kakaoId);
+
+        List<String> uniqueLocations = bags.stream()
+                .map(Bag::getLocation)
+                .distinct()
+                .collect(Collectors.toList());
+
+        int totalTripDuration = (int) bags.stream()
+                .mapToLong(bag -> {
+                    LocalDate startDate = LocalDate.parse(bag.getStartDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                    LocalDate endDate = LocalDate.parse(bag.getEndDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                    return startDate.until(endDate, ChronoUnit.DAYS) + 1;
+                })
+                .sum();
+
+        return new TripInfo(uniqueLocations.size(), totalTripDuration, uniqueLocations);
     }
 }
