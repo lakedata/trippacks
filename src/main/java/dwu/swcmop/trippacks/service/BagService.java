@@ -16,6 +16,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,20 +46,43 @@ public class BagService {
 
     //가방 조회
     @Transactional
-    public List<Bag> findAllBag(Long kakaoId){
+    public List<Bag> findAllBag(Long kakaoId) {
         List<Bag> allBags = bagRepository.findAllByKakaoId(kakaoId);
 
-        allBags.sort(Comparator.comparing(bag -> {
+        allBags.sort((bag1, bag2) -> {
             try {
-                return new SimpleDateFormat("yyyy-MM-dd").parse(bag.getStartDate());
+                Date startDate1 = new SimpleDateFormat("yyyy-MM-dd").parse(bag1.getStartDate());
+                Date startDate2 = new SimpleDateFormat("yyyy-MM-dd").parse(bag2.getStartDate());
+
+                int startDateComparison = startDate1.compareTo(startDate2);
+
+                if (startDateComparison == 0) {
+                    Date endDate1 = new SimpleDateFormat("yyyy-MM-dd").parse(bag1.getEndDate());
+                    Date endDate2 = new SimpleDateFormat("yyyy-MM-dd").parse(bag2.getEndDate());
+
+                    int endDateComparison = endDate1.compareTo(endDate2);
+
+                    if (endDateComparison == 0) {
+                        // 시작 날짜와 종료 날짜가 같은 경우, bagId를 기준으로 정렬
+                        return bag1.getBagId().compareTo(bag2.getBagId());
+                    } else {
+                        // 시작 날짜가 같고 종료 날짜가 다른 경우 종료 날짜를 기준으로 정렬
+                        return endDateComparison;
+                    }
+                }
+
+                return startDateComparison;
             } catch (ParseException e) {
                 // 파싱 예외를 처리합니다.
                 e.printStackTrace();
-                return null;
+                return 0;
             }
-        }));
+        });
 
         return allBags;
+    }
+    public List<Bag> findAlllatestBag(Long kakaoId){
+        return bagRepository.findAllByKakaoId(kakaoId);
     }
 
     @Transactional
