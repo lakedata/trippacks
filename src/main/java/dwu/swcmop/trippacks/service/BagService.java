@@ -3,7 +3,6 @@ package dwu.swcmop.trippacks.service;
 import dwu.swcmop.trippacks.dto.BagRequest;
 import dwu.swcmop.trippacks.dto.BagStatus;
 import dwu.swcmop.trippacks.entity.Bag;
-import dwu.swcmop.trippacks.entity.Pack;
 import dwu.swcmop.trippacks.entity.User;
 import dwu.swcmop.trippacks.exception.ResourceNotFoundException;
 import dwu.swcmop.trippacks.repository.BagRepository;
@@ -14,11 +13,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.*;
-
-import org.springframework.data.domain.Sort;
-
 
 @Service
 @AllArgsConstructor
@@ -50,17 +45,49 @@ public class BagService {
 
         allBags.sort((bag1, bag2) -> {
             try {
-                Date startDate1 = new SimpleDateFormat("yyyy-MM-dd").parse(bag1.getStartDate());
-                Date startDate2 = new SimpleDateFormat("yyyy-MM-dd").parse(bag2.getStartDate());
+                Date startDate1 = null;
+                Date startDate2 = null;
 
-                int startDateComparison = startDate1.compareTo(startDate2);
+                if (isValidDate(bag1.getStartDate())) {
+                    startDate1 = new SimpleDateFormat("yyyy-MM-dd").parse(bag1.getStartDate());
+                }
+
+                if (isValidDate(bag2.getStartDate())) {
+                    startDate2 = new SimpleDateFormat("yyyy-MM-dd").parse(bag2.getStartDate());
+                }
+
+                int startDateComparison = 0;
+
+                if (startDate1 != null && startDate2 != null) {
+                    startDateComparison = startDate1.compareTo(startDate2);
+                } else if (startDate1 != null) {
+                    return -1; // startDate2가 유효하지 않으면 startDate1을 앞으로 이동
+                } else if (startDate2 != null) {
+                    return 1; // startDate1이 유효하지 않으면 startDate2를 앞으로 이동
+                }
+
+                Date endDate1 = null;
+                Date endDate2 = null;
+
+                if (isValidDate(bag1.getEndDate())) {
+                    endDate1 = new SimpleDateFormat("yyyy-MM-dd").parse(bag1.getEndDate());
+                }
+
+                if (isValidDate(bag2.getEndDate())) {
+                    endDate2 = new SimpleDateFormat("yyyy-MM-dd").parse(bag2.getEndDate());
+                }
+
+                int endDateComparison = 0;
+
+                if (endDate1 != null && endDate2 != null) {
+                    endDateComparison = endDate1.compareTo(endDate2);
+                } else if (endDate1 != null) {
+                    return -1; // endDate2가 유효하지 않으면 endDate1을 앞으로 이동
+                } else if (endDate2 != null) {
+                    return 1; // endDate1이 유효하지 않으면 endDate2를 앞으로 이동
+                }
 
                 if (startDateComparison == 0) {
-                    Date endDate1 = new SimpleDateFormat("yyyy-MM-dd").parse(bag1.getEndDate());
-                    Date endDate2 = new SimpleDateFormat("yyyy-MM-dd").parse(bag2.getEndDate());
-
-                    int endDateComparison = endDate1.compareTo(endDate2);
-
                     if (endDateComparison == 0) {
                         // 시작 날짜와 종료 날짜가 같은 경우, bagId를 기준으로 정렬
                         return bag1.getBagId().compareTo(bag2.getBagId());
@@ -80,6 +107,17 @@ public class BagService {
 
         return allBags;
     }
+
+    // 날짜 유효성을 검사하는 메서드 추가
+    private boolean isValidDate(String date) {
+        try {
+            new SimpleDateFormat("yyyy-MM-dd").parse(date);
+            return true;
+        } catch (ParseException e) {
+            return false;
+        }
+    }
+
     public List<Bag> findAlllatestBag(Long kakaoId){
         List<Bag> bags = bagRepository.findAllByKakaoId(kakaoId);
         Collections.reverse(bags); // Reverse the list
@@ -137,7 +175,6 @@ public class BagService {
             try {
                 return new SimpleDateFormat("yyyy-MM-dd").parse(bag.getStartDate());
             } catch (ParseException e) {
-                // 파싱 예외를 처리합니다.
                 e.printStackTrace();
                 return null;
             }
@@ -155,7 +192,6 @@ public class BagService {
             try {
                 return new SimpleDateFormat("yyyy-MM-dd").parse(bag.getStartDate());
             } catch (ParseException e) {
-                // 파싱 예외를 처리합니다.
                 e.printStackTrace();
                 return null;
             }

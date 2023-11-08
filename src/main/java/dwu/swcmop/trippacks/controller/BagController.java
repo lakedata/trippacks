@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -81,14 +82,21 @@ public class BagController {
                 .distinct()
                 .collect(Collectors.toList());
 
-        int totalTripDuration = (int) bags.stream()
-                .mapToLong(bag -> {
-                    LocalDate startDate = LocalDate.parse(bag.getStartDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-                    LocalDate endDate = LocalDate.parse(bag.getEndDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-                    return startDate.until(endDate, ChronoUnit.DAYS) + 1;
-                })
+        int totalTripDuration = bags.stream()
+                .mapToInt(bag -> calculateDuration(bag.getStartDate(), bag.getEndDate()))
                 .sum();
 
         return new TripInfo(uniqueLocations.size(), totalTripDuration, uniqueLocations);
+    }
+
+    private int calculateDuration(String startDateString, String endDateString) {
+        try {
+            LocalDate startDate = LocalDate.parse(startDateString, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            LocalDate endDate = LocalDate.parse(endDateString, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            return (int) startDate.until(endDate, ChronoUnit.DAYS) + 1;
+        } catch (DateTimeParseException e) {
+            e.printStackTrace();// 날짜 형식이 잘못된 경우 0을 반환
+            return 0;
+        }
     }
 }
