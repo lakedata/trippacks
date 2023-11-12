@@ -5,10 +5,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
-public class CorsConfig {
-    @Bean
+public class CorsConfig implements WebMvcConfigurer {
+    /*@Bean
     public CorsFilter corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
@@ -17,7 +19,16 @@ public class CorsConfig {
         config.addAllowedHeader("*"); //모든 header 응답 허용
         config.addExposedHeader("*"); //
         config.addAllowedMethod("*");//모든 요청 메소드 응답 허용
-        source.registerCorsConfiguration("/api/**", config);
+        source.registerCorsConfiguration("/**", config);
         return new CorsFilter();
+    }*/
+
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")
+                .allowedOriginPatterns("*")  // "*" 대신 특정 패턴을 지정할 수 있음
+                .allowedMethods("*")
+                .allowedHeaders("*")
+                .exposedHeaders("*")
+                .allowCredentials(true);
     }
 }
