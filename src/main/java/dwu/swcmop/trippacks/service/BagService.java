@@ -8,12 +8,17 @@ import dwu.swcmop.trippacks.exception.ResourceNotFoundException;
 import dwu.swcmop.trippacks.repository.BagRepository;
 import dwu.swcmop.trippacks.repository.UserRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -23,7 +28,7 @@ public class BagService {
 
     //가방 생성
     @Transactional
-    public Bag createBag(Long kakaoId, BagRequest request){
+    public Bag createBag(Long kakaoId, BagRequest request) {
         User user = userRepository.findByKakaoId(kakaoId); //변경
         System.out.println(user);
         Bag newBag = Bag.builder()
@@ -39,73 +44,83 @@ public class BagService {
     }
 
     //가방 조회
+    //마감순
     @Transactional
-    public List<Bag> findAllBag(Long kakaoId) {
-        List<Bag> allBags = bagRepository.findAllByKakaoId(kakaoId);
+    public Page<Bag> findAllBag(Long kakaoId, BagStatus status, Pageable pageable) {
+        List<Bag> allBags = bagRepository.findByKakaoIdAndStatus(kakaoId, status);
 
-        allBags.sort((bag1, bag2) -> {
-            try {
-                Date startDate1 = null;
-                Date startDate2 = null;
+        Pageable paging = PageRequest.of(
+                pageable.getPageNumber(),
+                pageable.getPageSize(),
+                pageable.getSort()
+        );
 
-                if (isValidDate(bag1.getStartDate())) {
-                    startDate1 = new SimpleDateFormat("yyyy-MM-dd").parse(bag1.getStartDate());
-                }
+        List<Bag> pagedBags = allBags.stream()
+                .sorted((bag1, bag2) -> {
+                    try {
+                        Date startDate1 = null;
+                        Date startDate2 = null;
 
-                if (isValidDate(bag2.getStartDate())) {
-                    startDate2 = new SimpleDateFormat("yyyy-MM-dd").parse(bag2.getStartDate());
-                }
+                        if (isValidDate(bag1.getStartDate())) {
+                            startDate1 = new SimpleDateFormat("yyyy-MM-dd").parse(bag1.getStartDate());
+                        }
 
-                int startDateComparison = 0;
+                        if (isValidDate(bag2.getStartDate())) {
+                            startDate2 = new SimpleDateFormat("yyyy-MM-dd").parse(bag2.getStartDate());
+                        }
 
-                if (startDate1 != null && startDate2 != null) {
-                    startDateComparison = startDate1.compareTo(startDate2);
-                } else if (startDate1 != null) {
-                    return -1; // startDate2가 유효하지 않으면 startDate1을 앞으로 이동
-                } else if (startDate2 != null) {
-                    return 1; // startDate1이 유효하지 않으면 startDate2를 앞으로 이동
-                }
+                        int startDateComparison = 0;
 
-                Date endDate1 = null;
-                Date endDate2 = null;
+                        if (startDate1 != null && startDate2 != null) {
+                            startDateComparison = startDate1.compareTo(startDate2);
+                        } else if (startDate1 != null) {
+                            return -1; // startDate2가 유효하지 않으면 startDate1을 앞으로 이동
+                        } else if (startDate2 != null) {
+                            return 1; // startDate1이 유효하지 않으면 startDate2를 앞으로 이동
+                        }
 
-                if (isValidDate(bag1.getEndDate())) {
-                    endDate1 = new SimpleDateFormat("yyyy-MM-dd").parse(bag1.getEndDate());
-                }
+                        Date endDate1 = null;
+                        Date endDate2 = null;
 
-                if (isValidDate(bag2.getEndDate())) {
-                    endDate2 = new SimpleDateFormat("yyyy-MM-dd").parse(bag2.getEndDate());
-                }
+                        if (isValidDate(bag1.getEndDate())) {
+                            endDate1 = new SimpleDateFormat("yyyy-MM-dd").parse(bag1.getEndDate());
+                        }
 
-                int endDateComparison = 0;
+                        if (isValidDate(bag2.getEndDate())) {
+                            endDate2 = new SimpleDateFormat("yyyy-MM-dd").parse(bag2.getEndDate());
+                        }
 
-                if (endDate1 != null && endDate2 != null) {
-                    endDateComparison = endDate1.compareTo(endDate2);
-                } else if (endDate1 != null) {
-                    return -1; // endDate2가 유효하지 않으면 endDate1을 앞으로 이동
-                } else if (endDate2 != null) {
-                    return 1; // endDate1이 유효하지 않으면 endDate2를 앞으로 이동
-                }
+                        int endDateComparison = 0;
 
-                if (startDateComparison == 0) {
-                    if (endDateComparison == 0) {
-                        // 시작 날짜와 종료 날짜가 같은 경우, bagId를 기준으로 정렬
-                        return bag1.getBagId().compareTo(bag2.getBagId());
-                    } else {
-                        // 시작 날짜가 같고 종료 날짜가 다른 경우 종료 날짜를 기준으로 정렬
-                        return endDateComparison;
+                        if (endDate1 != null && endDate2 != null) {
+                            endDateComparison = endDate1.compareTo(endDate2);
+                        } else if (endDate1 != null) {
+                            return -1; // endDate2가 유효하지 않으면 endDate1을 앞으로 이동
+                        } else if (endDate2 != null) {
+                            return 1; // endDate1이 유효하지 않으면 endDate2를 앞으로 이동
+                        }
+
+                        if (startDateComparison == 0) {
+                            if (endDateComparison == 0) {
+                                // 시작 날짜와 종료 날짜가 같은 경우, bagId를 기준으로 정렬
+                                return bag1.getBagId().compareTo(bag2.getBagId());
+                            } else {
+                                // 시작 날짜가 같고 종료 날짜가 다른 경우 종료 날짜를 기준으로 정렬
+                                return endDateComparison;
+                            }
+                        }
+
+                        return startDateComparison;
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                        return 0;
                     }
-                }
+                })
+                .skip(paging.getOffset())
+                .limit(paging.getPageSize())
+                .collect(Collectors.toList());
 
-                return startDateComparison;
-            } catch (ParseException e) {
-                // 파싱 예외를 처리합니다.
-                e.printStackTrace();
-                return 0;
-            }
-        });
-
-        return allBags;
+        return new PageImpl<>(pagedBags, paging, allBags.size());
     }
 
     // 날짜 유효성을 검사하는 메서드 추가
@@ -118,16 +133,28 @@ public class BagService {
         }
     }
 
-    public List<Bag> findAlllatestBag(Long kakaoId){
-        List<Bag> bags = bagRepository.findAllByKakaoId(kakaoId);
-        Collections.reverse(bags); // Reverse the list
+    //등록순
+    @Transactional
+    public Page<Bag> findAllPagedLatestBag(Long kakaoId, BagStatus status, Pageable pageable) {
+        List<Bag> bags = bagRepository.findByKakaoIdAndStatus(kakaoId, status);
+        Collections.reverse(bags);
 
-        return bags;
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), bags.size());
+
+        return new PageImpl<>(bags.subList(start, end), pageable, bags.size());
     }
 
     @Transactional
     public Bag findBag(Long bagId){
         return bagRepository.findByBagId(bagId);
+    }
+
+    //여행정보에 사용
+    public List<Bag> findAll(Long kakaoId){
+        List<Bag> bags = bagRepository.findAllByKakaoId(kakaoId);
+
+        return bags;
     }
 
     //가방 수정
@@ -167,7 +194,7 @@ public class BagService {
         bag.setStatus(BagStatus.AVAILABLE);
         return bag;
     }
-
+/*
     @Transactional
     public List<Bag> findClosedBagsByKakaoId(Long kakaoId) {
         List<Bag> closeBags = bagRepository.findAllByKakaoIdAndStatus(kakaoId, BagStatus.FINISHED);
@@ -199,4 +226,5 @@ public class BagService {
 
         return openBags;
     }
+*/
 }
