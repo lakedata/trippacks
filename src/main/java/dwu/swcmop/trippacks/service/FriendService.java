@@ -51,10 +51,11 @@ public class FriendService {
             throw new BaseException(ADD_FRIEND_FAIL);
         }
         String userEmail = (user != null) ? user.getKakaoEmail() : null;
-        FriendResponse bagResponse = new FriendResponse(saveFriend.getId(), saveFriend.getUserId(), saveFriend.getFriendId(), userEmail, saveFriend.getIsFriend());
+        FriendResponse friendResponse = new FriendResponse(saveFriend.getId(), saveFriend.getUserId(), saveFriend.getFriendId(), userEmail, saveFriend.getIsFriend());
 
-        return bagResponse;
+        return friendResponse;
     }
+
 
 
     public int acceptFriend(long Id, long fId) throws BaseException {

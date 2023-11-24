@@ -48,9 +48,9 @@ public class FriendController {
     public BaseResponse<FriendResponse> create(@RequestBody @Valid FriendRequest friendRequest) {
         try {
 
-            FriendResponse bagResponse = friendService.createFriend(friendRequest);
+            FriendResponse friendResponse = friendService.createFriend(friendRequest);
 
-            return new BaseResponse<>(bagResponse);
+            return new BaseResponse<>(friendResponse);
         } catch (BaseException e) {
             return new BaseResponse<>(e.getStatus());
         }

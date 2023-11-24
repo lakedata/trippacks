@@ -1,6 +1,7 @@
 package dwu.swcmop.trippacks.controller;
 
 import dwu.swcmop.trippacks.dto.BagRequest;
+import dwu.swcmop.trippacks.dto.BagResponse;
 import dwu.swcmop.trippacks.dto.TripInfo;
 import dwu.swcmop.trippacks.entity.Bag;
 import dwu.swcmop.trippacks.service.BagService;
@@ -42,8 +43,9 @@ public class BagController {
     }
 
     @GetMapping("/bag/{id}")
-    public Bag getBag(@PathVariable("id") Long id){
-        return bagService.findBag(id);
+    public BagResponse getBag(@PathVariable("id") Long id){
+        Bag bag = bagService.findBag(id);
+        return BagResponse.fromEntity(bag);
     }
 
     @PostMapping("/bag/{kakaoId}")
