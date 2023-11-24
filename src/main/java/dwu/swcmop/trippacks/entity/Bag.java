@@ -1,6 +1,7 @@
 package dwu.swcmop.trippacks.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import dwu.swcmop.trippacks.dto.BagStatus;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,7 +26,7 @@ public class Bag {
     @Column(name = "bag_id")
     private Long bagId;
 
-    @JsonBackReference
+    @JsonBackReference    // @JsonIgnoreProperties("bags")
     @ManyToOne
     @JoinColumn(name = "kakao_id")
     private User user;
