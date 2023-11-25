@@ -153,7 +153,6 @@ public class BagService {
     //여행정보에 사용
     public List<Bag> findAll(Long kakaoId){
         List<Bag> bags = bagRepository.findAllByKakaoId(kakaoId);
-
         return bags;
     }
 
