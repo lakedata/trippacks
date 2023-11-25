@@ -1,12 +1,11 @@
 package dwu.swcmop.trippacks.repository;
+
 import dwu.swcmop.trippacks.entity.Friend;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 @Repository
@@ -24,7 +23,6 @@ public interface FriendRepository extends JpaRepository<Friend, Long> {
 
     void deleteAllByUserIdOrFriendId(Long userId, Long friendId);
 
-//    List<Friend> findByUserIdAndFriendId(Long userId, Long friendId);
     @Query("SELECT f FROM Friend f WHERE (f.userId = :userId AND f.friendId = :friendId) OR (f.userId = :friendId AND f.friendId = :userId)")
     List<Friend> findFriendsWithUserIds(@Param("userId") Long userId, @Param("friendId") Long friendId);
 

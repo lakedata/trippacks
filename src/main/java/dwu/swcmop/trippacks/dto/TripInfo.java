@@ -1,11 +1,12 @@
 package dwu.swcmop.trippacks.dto;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
 import java.util.List;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class TripInfo {
     private int numberOfLocations;
     private int totalTripDuration;

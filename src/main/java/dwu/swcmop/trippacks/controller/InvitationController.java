@@ -8,7 +8,6 @@ import dwu.swcmop.trippacks.dto.InvitationResponse;
 import dwu.swcmop.trippacks.entity.Invitation;
 import dwu.swcmop.trippacks.repository.InvitationMapper;
 import dwu.swcmop.trippacks.service.InvitationService;
-import io.swagger.annotations.Tag;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

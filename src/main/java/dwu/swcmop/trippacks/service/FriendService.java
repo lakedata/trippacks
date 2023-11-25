@@ -1,5 +1,7 @@
 package dwu.swcmop.trippacks.service;
 
+import static dwu.swcmop.trippacks.config.BaseResponseStatus.*;
+
 import dwu.swcmop.trippacks.config.BaseException;
 import dwu.swcmop.trippacks.dto.FriendRequest;
 import dwu.swcmop.trippacks.dto.FriendResponse;
@@ -13,11 +15,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.transaction.Transactional;
-
-
 import java.util.List;
 
-import static dwu.swcmop.trippacks.config.BaseResponseStatus.*;
 
 @Service
 public class FriendService {
@@ -55,7 +54,6 @@ public class FriendService {
 
         return friendResponse;
     }
-
 
 
     public int acceptFriend(long Id, long fId) throws BaseException {

@@ -38,8 +38,8 @@ public class User {
     private String userRole;
 
     @Column(name = "create_time")
-    @CreatedDate//DB에서 current_timestamp설정시 사용
-    private Timestamp createTime;//유저 관리용 시간
+    @CreatedDate //DB에서 current_timestamp설정시 사용
+    private Timestamp createTime; //유저 관리용 시간
 
     @JsonManagedReference
     @OneToMany(mappedBy = "user",

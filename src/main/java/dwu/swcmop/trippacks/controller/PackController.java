@@ -1,18 +1,13 @@
 package dwu.swcmop.trippacks.controller;
 
 import dwu.swcmop.trippacks.dto.PackRequest;
-import dwu.swcmop.trippacks.entity.Bag;
 import dwu.swcmop.trippacks.entity.Pack;
-import dwu.swcmop.trippacks.entity.User;
 import dwu.swcmop.trippacks.repository.BagRepository;
 import dwu.swcmop.trippacks.service.PackService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @AllArgsConstructor

@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import dwu.swcmop.trippacks.entity.Bag;
 import lombok.*;
 
-//@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter

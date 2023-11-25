@@ -5,13 +5,13 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.type.TypeFactory;
 
 import javax.persistence.*;
 
 
 @Entity
-@Getter @Setter
+@Getter
+@Setter
 @NoArgsConstructor
 @Table(name = "request")
 public class Request {

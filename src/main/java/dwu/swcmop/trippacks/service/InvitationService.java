@@ -29,10 +29,10 @@ public class InvitationService {
 
     @Transactional(readOnly = true)
     public Invitation findOneBySlug(@Param("slug") String slug) throws BaseException {
-        Invitation invitation = invitationRepository.findOneBySlug(slug).orElseThrow(()->new BaseException(BaseResponseStatus.INVITATION_NOT_FOUND));
+        Invitation invitation = invitationRepository.findOneBySlug(slug).orElseThrow(() -> new BaseException(BaseResponseStatus.INVITATION_NOT_FOUND));
         LocalDateTime updatedAt = invitation.getUpdatedAt();
 
-        if(updatedAt.isBefore(LocalDateTime.now().minusDays(1))){
+        if (updatedAt.isBefore(LocalDateTime.now().minusDays(1))) {
             throw new BaseException(BaseResponseStatus.INVITATION_EXPIRED);
         }
         return invitation;
@@ -40,7 +40,7 @@ public class InvitationService {
 
     @Transactional
     public Invitation createOrUpdate(@Param("bagId") Long bagId) throws BaseException {
-        Bag bag = bagRepository.findById(bagId).orElseThrow(()->
+        Bag bag = bagRepository.findById(bagId).orElseThrow(() ->
                 new BaseException(BaseResponseStatus.BAG_NOT_FOUND));
 
         Optional<Invitation> invitation = invitationRepository.findOneByBagId(bagId);
@@ -59,11 +59,11 @@ public class InvitationService {
         return invitationRepository.save(newInvitation);
     }
 
-    public static String generateRandomString(){
+    public static String generateRandomString() {
         Random random = new Random();
         StringBuilder sb = new StringBuilder(LENGTH);
 
-        for(int i=0;i<LENGTH;i++){
+        for (int i = 0; i < LENGTH; i++) {
             int randomIndex = random.nextInt(CHARACTERS.length());
             char randomChar = CHARACTERS.charAt(randomIndex);
             sb.append(randomChar);

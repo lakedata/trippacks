@@ -5,7 +5,6 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dwu.swcmop.trippacks.config.BaseException;
-import dwu.swcmop.trippacks.entity.Friend;
 import dwu.swcmop.trippacks.entity.User;
 import dwu.swcmop.trippacks.config.jwt.JwtProperties;
 import dwu.swcmop.trippacks.model.oauth.KakaoProfile;
@@ -13,7 +12,6 @@ import dwu.swcmop.trippacks.repository.FriendRepository;
 import dwu.swcmop.trippacks.repository.RequestRepository;
 import dwu.swcmop.trippacks.repository.UserRepository;
 import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -57,7 +55,7 @@ public class UserService {
                     .build();
 
             userRepository.save(user);
-        }else {
+        } else {
             // Update
             user.setKakaoProfileImg(kakaoProfileImg);
             user.setKakaoNickname(kakaoNickname);
