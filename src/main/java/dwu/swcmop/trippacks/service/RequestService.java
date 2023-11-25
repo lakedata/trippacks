@@ -46,7 +46,7 @@ public class RequestService {
             Long fromUserId = request.getFromUserId();
             toFriendId = request.getToFriendId();
 
-            // fromUserId와 toFriendId를 사용하여 사용자 정보 가져오기
+            // fromUserId와 toFriendId를 사용하여 사용자 정보 가져옴
             User fromUser = userRepository.findById(fromUserId).orElse(null);
             User toFriend = userRepository.findById(toFriendId).orElse(null);
 
@@ -78,10 +78,4 @@ public class RequestService {
             // 요청이 존재하지 않음을 처리
         }
     }
-
-    //사용자 탈퇴시, 요청도 함꼐 삭제
-    public void deleteRequestByUser(Long toFriendId) {
-
-    }
-    //친구 삭제시, 요청도 함께 삭제
 }

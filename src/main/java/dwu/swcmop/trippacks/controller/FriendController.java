@@ -21,7 +21,6 @@ import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static dwu.swcmop.trippacks.config.BaseResponseStatus.ACCEPT_FRIEND_FAIL;
 import static dwu.swcmop.trippacks.config.BaseResponseStatus.DELETE_FRIEND_FAIL;
@@ -38,7 +37,7 @@ public class FriendController {
     private FriendRepository friendRepository;
 
     @Autowired
-    private  UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Autowired
     private UserService userService;

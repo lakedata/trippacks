@@ -1,10 +1,8 @@
 package dwu.swcmop.trippacks.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -22,8 +20,8 @@ public class ChatGptResponse implements Serializable {
 
     @Builder
     public ChatGptResponse(String id, String object,
-                              LocalDate created, String model,
-                              List<Choice> choices) {
+                           LocalDate created, String model,
+                           List<Choice> choices) {
         this.id = id;
         this.object = object;
         this.created = created;

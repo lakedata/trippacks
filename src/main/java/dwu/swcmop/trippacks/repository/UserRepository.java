@@ -9,10 +9,6 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-
-    //    User save(User user);
-    // JPA findBy 규칙
-    // select * from user_master where kakao_email = ?
     User findByKakaoEmail(String kakaoEmail);
 
     User findByUserCode(Long userCode);
@@ -23,6 +19,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findById(Long userCode);
 
-    // Add a method to find users by userCode
     List<User> findByUserCodeIn(List<Long> userCodes);
 }

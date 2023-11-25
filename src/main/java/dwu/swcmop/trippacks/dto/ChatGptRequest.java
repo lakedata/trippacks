@@ -4,9 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
 import java.io.Serializable;
-import java.time.LocalDate;
-import java.util.List;
 
 @Getter
 @NoArgsConstructor
@@ -22,8 +21,8 @@ public class ChatGptRequest implements Serializable {
 
     @Builder
     public ChatGptRequest(String model, String prompt,
-                             Integer maxTokens, Double temperature,
-                             Double topP) {
+                          Integer maxTokens, Double temperature,
+                          Double topP) {
         this.model = model;
         this.prompt = prompt;
         this.maxTokens = maxTokens;

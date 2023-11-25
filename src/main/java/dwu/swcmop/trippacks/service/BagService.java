@@ -146,21 +146,21 @@ public class BagService {
     }
 
     @Transactional
-    public Bag findBag(Long bagId){
+    public Bag findBag(Long bagId) {
         return bagRepository.findByBagId(bagId);
     }
 
     //여행정보에 사용
-    public List<Bag> findAll(Long kakaoId){
+    public List<Bag> findAll(Long kakaoId) {
         List<Bag> bags = bagRepository.findAllByKakaoId(kakaoId);
         return bags;
     }
 
     //가방 수정
     @Transactional
-    public Bag updateBag(Long id, BagRequest request){
+    public Bag updateBag(Long id, BagRequest request) {
         Bag bag = bagRepository.findByBagId(id);
-        if(bag == null) new ResourceNotFoundException("Bag", "id", id);
+        if (bag == null) new ResourceNotFoundException("Bag", "id", id);
         bag.setBagName(request.getBagName());
         bag.setLocation(request.getLocation());
         bag.setStartDate(request.getStartDate());
@@ -170,26 +170,26 @@ public class BagService {
 
     //가방 삭제
     @Transactional
-    public void deleteBag(Long id){
+    public void deleteBag(Long id) {
         Bag bag = bagRepository.findByBagId(id);
-        if(bag == null) new ResourceNotFoundException("Bag", "id", id);
+        if (bag == null) new ResourceNotFoundException("Bag", "id", id);
         bagRepository.delete(bag);
     }
 
     //가방 종료
     @Transactional
-    public Bag closeBag(Long id){
+    public Bag closeBag(Long id) {
         Bag bag = bagRepository.findByBagId(id);
-        if(bag == null) new ResourceNotFoundException("Bag", "id", id);
+        if (bag == null) new ResourceNotFoundException("Bag", "id", id);
         bag.setStatus(BagStatus.FINISHED);
         return bag;
     }
 
     //가방 오픈
     @Transactional
-    public Bag openBag(Long id){
+    public Bag openBag(Long id) {
         Bag bag = bagRepository.findByBagId(id);
-        if(bag == null) new ResourceNotFoundException("Bag", "id", id);
+        if (bag == null) new ResourceNotFoundException("Bag", "id", id);
         bag.setStatus(BagStatus.AVAILABLE);
         return bag;
     }

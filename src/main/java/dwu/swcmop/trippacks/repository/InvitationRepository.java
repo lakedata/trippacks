@@ -7,10 +7,10 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 
-public interface InvitationRepository  extends JpaRepository<Invitation, Integer> {
+public interface InvitationRepository extends JpaRepository<Invitation, Integer> {
     @Query("SELECT i FROM Invitation i WHERE i.slug = :slug")
     Optional<Invitation> findOneBySlug(@Param("slug") String slug);
 
     @Query("SELECT i FROM Invitation i WHERE i.bag.id = :bagId")
-    Optional<Invitation> findOneByBagId(@Param("bagId")Long bagId);
+    Optional<Invitation> findOneByBagId(@Param("bagId") Long bagId);
 }

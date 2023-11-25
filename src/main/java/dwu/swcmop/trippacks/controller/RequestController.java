@@ -3,7 +3,6 @@ package dwu.swcmop.trippacks.controller;
 import dwu.swcmop.trippacks.dto.RequestRequest;
 import dwu.swcmop.trippacks.dto.RequestWithUserInfo;
 import dwu.swcmop.trippacks.entity.Bag;
-import dwu.swcmop.trippacks.entity.Pack;
 import dwu.swcmop.trippacks.entity.Request;
 import dwu.swcmop.trippacks.entity.User;
 import dwu.swcmop.trippacks.repository.BagRepository;
@@ -14,12 +13,10 @@ import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
-@RestController //(1)
+@RestController
 @RequestMapping("/request")
 public class RequestController {
 
