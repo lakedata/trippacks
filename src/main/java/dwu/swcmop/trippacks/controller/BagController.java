@@ -54,6 +54,11 @@ public class BagController {
         Page<Bag> bagPage = bagService.findAllPagedLatestBag(kakaoId, bagStatus, PageRequest.of(page, size));
         return new ResponseEntity<>(bagPage, HttpStatus.OK);
     }
+
+    @GetMapping("/bag/triplist")
+    public List<Bag> getBaglatestList(@RequestParam Long kakaoId) {
+        return bagService.findAll(kakaoId);
+    }
 /*
     @GetMapping("/closedBags")
     public List<Bag> getClosedBagsForKakaoId(@RequestParam Long kakaoId) {
